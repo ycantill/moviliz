@@ -9,14 +9,6 @@ const MUNI = { barranquilla: 'Barranquilla', soledad: 'Soledad', malambo: 'Malam
 let index = null;
 const chosen = { origen: null, destino: null };
 
-// ---------- Estado de red ----------
-function updateNet() {
-  $('#estado-red').textContent = navigator.onLine ? 'En línea' : 'Sin conexión';
-}
-addEventListener('online', updateNet);
-addEventListener('offline', updateNet);
-updateNet();
-
 // ---------- Recientes (solo en este dispositivo) ----------
 // Cada búsqueda guarda el viaje completo (origen y destino). Si el origen
 // es la ubicación del GPS, no se guarda, porque cambia cada vez.
