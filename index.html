@@ -2,6 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
+  <!-- Solo se cargan recursos del mismo sitio: sin scripts ni estilos en línea ni de terceros. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Moviliz</title>
   <meta name="description" content="Planea tu viaje en Transmetro Barranquilla, incluso sin conexión.">
@@ -21,15 +24,16 @@
       <div class="field" data-role="origen">
         <label for="origen">Desde</label>
         <div class="row">
-          <input id="origen" type="text" placeholder="Dirección, estación o paradero" enterkeyhint="next">
+          <input id="origen" type="text" placeholder="Dirección, estación o paradero" enterkeyhint="next"
+                 role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sug-origen" aria-describedby="elegido-origen">
           <select class="muni" aria-label="Municipio del origen">
             <option value="barranquilla">Barranquilla</option>
             <option value="soledad">Soledad</option>
           </select>
         </div>
-        <ul class="sugerencias" role="listbox" hidden></ul>
-        <p class="elegido" hidden></p>
-        <button type="button" id="mi-ubicacion" class="link ubicacion" hidden>📍 Usar mi ubicación</button>
+        <ul id="sug-origen" class="sugerencias" role="listbox" aria-label="Sugerencias para el origen" hidden></ul>
+        <p id="elegido-origen" class="elegido" hidden></p>
+        <button type="button" id="mi-ubicacion" class="link ubicacion" hidden><span aria-hidden="true">📍</span> <span class="txt">Usar mi ubicación</span></button>
       </div>
 
       <button type="button" id="invertir" class="icon" aria-label="Invertir origen y destino">⇅</button>
@@ -37,14 +41,15 @@
       <div class="field" data-role="destino">
         <label for="destino">Hasta</label>
         <div class="row">
-          <input id="destino" type="text" placeholder="Dirección, estación o paradero" enterkeyhint="search">
+          <input id="destino" type="text" placeholder="Dirección, estación o paradero" enterkeyhint="search"
+                 role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sug-destino" aria-describedby="elegido-destino">
           <select class="muni" aria-label="Municipio del destino">
             <option value="barranquilla">Barranquilla</option>
             <option value="soledad">Soledad</option>
           </select>
         </div>
-        <ul class="sugerencias" role="listbox" hidden></ul>
-        <p class="elegido" hidden></p>
+        <ul id="sug-destino" class="sugerencias" role="listbox" aria-label="Sugerencias para el destino" hidden></ul>
+        <p id="elegido-destino" class="elegido" hidden></p>
       </div>
 
       <section id="recientes" class="recientes" aria-label="Recientes" hidden>
@@ -68,6 +73,7 @@
     </form>
 
     <section id="resultado" aria-live="polite"></section>
+    <p id="anuncio" class="sr-only" role="status" aria-live="polite"></p>
 
     <details class="card">
       <summary>Acerca de los datos</summary>

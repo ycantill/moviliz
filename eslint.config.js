@@ -17,6 +17,11 @@ export default [
     languageOptions: { globals: globals.node },
   },
   {
+    // Lo que va dentro de page.evaluate() corre en el navegador.
+    files: ['tests/e2e/**/*.mjs'],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
+  },
+  {
     rules: {
       'no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrors: 'none' }],
       eqeqeq: ['error', 'smart'],

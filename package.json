@@ -5,13 +5,16 @@
   "scripts": {
     "build:data": "node scripts/build-data.mjs",
     "test": "node --test tests/router.test.mjs",
-    "start": "python3 -m http.server 8080",
+    "start": "node scripts/serve.mjs 8080",
     "lint": "eslint .",
     "type-check": "tsc -p tsconfig.json",
-    "check": "npm run lint && npm run type-check && npm test"
+    "check": "npm run lint && npm run type-check && npm test",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.1",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
     "@types/node": "^26.6.7",
     "eslint": "^10.15.0",
     "globals": "^17.14.0",

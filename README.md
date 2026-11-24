@@ -35,6 +35,7 @@ sus vecinos.
 npm ci               # herramientas de desarrollo (ESLint, TypeScript)
 npm run build:data   # regenera data/transmetro.json
 npm run check        # lint, tipos (JSDoc + tsc) y pruebas del buscador de rutas
+npm run test:e2e     # pruebas E2E con Playwright (requiere npx playwright install chromium)
 npm start            # sirve la app en http://localhost:8080
 ```
 
