@@ -1,0 +1,976 @@
+{
+ "version": "1.0",
+ "fecha": "2026-11-24",
+ "fuente_principal": "https://transmetro.gov.co (rutas troncales, rutas alimentadoras, estaciones y matriz de transbordos), leída el 24 nov 2026",
+ "estaciones": [
+  {
+   "nombre": "Portal de Soledad",
+   "corredor": "Murillo",
+   "ubicacion": "Calle 65 # 13-455, Soledad"
+  },
+  {
+   "nombre": "Pacho Galán",
+   "corredor": "Murillo",
+   "ubicacion": "entre carreras 16 y 17, Soledad"
+  },
+  {
+   "nombre": "Pedro Ramayá Beltrán",
+   "corredor": "Murillo",
+   "ubicacion": "entre carrera 23 y Av. Circunvalar"
+  },
+  {
+   "nombre": "Joaquín Barrios Polo / Estadio Metropolitano",
+   "corredor": "Murillo",
+   "ubicacion": "junto al Estadio Metropolitano (también 'Gases del Caribe')"
+  },
+  {
+   "nombre": "Buenos Aires",
+   "corredor": "Murillo",
+   "ubicacion": "entre carreras 7 y 7G"
+  },
+  {
+   "nombre": "La Ocho",
+   "corredor": "Murillo",
+   "ubicacion": "entre carreras 8 y 8C"
+  },
+  {
+   "nombre": "La Catorce",
+   "corredor": "Murillo",
+   "ubicacion": "entre carreras 14 y 17"
+  },
+  {
+   "nombre": "La Veintiuna",
+   "corredor": "Murillo",
+   "ubicacion": "entre carreras 20 y 21"
+  },
+  {
+   "nombre": "Atlántico",
+   "corredor": "Murillo",
+   "ubicacion": "entre carreras 26 y 27"
+  },
+  {
+   "nombre": "Chiquinquirá",
+   "corredor": "Murillo",
+   "ubicacion": "entre carreras 33 y 36"
+  },
+  {
+   "nombre": "La Arenosa",
+   "corredor": "Murillo",
+   "ubicacion": "entre carreras 41 y 43"
+  },
+  {
+   "nombre": "La Catedral",
+   "corredor": "Olaya Herrera (Cra 46)",
+   "ubicacion": "entre calles 50 y 53"
+  },
+  {
+   "nombre": "Alfredo Correa de Andréis",
+   "corredor": "Olaya Herrera (Cra 46)",
+   "ubicacion": "entre calles 60 y 62"
+  },
+  {
+   "nombre": "Esthercita Forero",
+   "corredor": "Olaya Herrera (Cra 46)",
+   "ubicacion": "entre calles 69 y 70"
+  },
+  {
+   "nombre": "Estación de Retorno Joe Arroyo",
+   "corredor": "Olaya Herrera (Cra 46)",
+   "ubicacion": "Carrera 46 con calle 74"
+  },
+  {
+   "nombre": "Barrio Abajo",
+   "corredor": "Olaya Herrera (Cra 46)",
+   "ubicacion": "entre calles 43 y 45"
+  },
+  {
+   "nombre": "Parque Cultural del Caribe",
+   "corredor": "Olaya Herrera (Cra 46)",
+   "ubicacion": "entre calles 36 y 39"
+  }
+ ],
+ "corredores": {
+  "Murillo (sur a norte)": [
+   "Portal de Soledad",
+   "Pacho Galán",
+   "Pedro Ramayá Beltrán",
+   "Joaquín Barrios Polo / Estadio Metropolitano",
+   "Buenos Aires",
+   "La Ocho",
+   "La Catorce",
+   "La Veintiuna",
+   "Atlántico",
+   "Chiquinquirá",
+   "La Arenosa"
+  ],
+  "Olaya Herrera norte (de La Catedral a Joe Arroyo)": [
+   "La Catedral",
+   "Alfredo Correa de Andréis",
+   "Esthercita Forero",
+   "Estación de Retorno Joe Arroyo"
+  ],
+  "Olaya Herrera centro (de La Arenosa a Parque Cultural)": [
+   "La Arenosa",
+   "Barrio Abajo",
+   "Parque Cultural del Caribe"
+  ],
+  "nota": "Desde La Arenosa, las rutas R y S siguen hacia La Catedral y las rutas B hacia Barrio Abajo. La Catedral y Barrio Abajo solo se conectan con las rutas R2 y B2."
+ },
+ "letras": {
+  "R": "van hacia la Estación de Retorno Joe Arroyo",
+  "S": "van hacia el Portal de Soledad",
+  "B": "van hacia Parque Cultural del Caribe"
+ },
+ "reglas_transbordo": {
+  "costo": "Gratis dentro de la ventana de tiempo; se paga un solo pasaje.",
+  "ventana": "105 minutos desde la primera validación.",
+  "maximo": "Hasta 2 transbordos en 105 minutos (la misma página también menciona un máximo de 3).",
+  "troncal_a_troncal": "Solo dentro del sistema y en un solo sentido.",
+  "donde": "Solo en los paraderos o estaciones de la matriz de transbordos.",
+  "tarjeta": "Hay que validar la tarjeta en cada transbordo; cada persona necesita su propia tarjeta."
+ },
+ "matriz_transbordos_troncal_alimentadora": {
+  "Estación de Retorno Joe Arroyo": [
+   "A7-1",
+   "A7-3",
+   "A7-4",
+   "A8-1",
+   "A8-2",
+   "A9-3",
+   "A9-4",
+   "U-30",
+   "A8-3 (según la matriz; la página de la ruta la ubica en La Catedral, Barrio Abajo y Parque Cultural)"
+  ],
+  "La Catedral / Barrio Abajo / Parque Cultural del Caribe": [
+   "A8-3"
+  ],
+  "Portal de Soledad": [
+   "A3-2",
+   "A3-3",
+   "A3-31",
+   "A3-4",
+   "A3-41",
+   "A4-1 (suspendida)",
+   "A5-3",
+   "A5-4",
+   "A5-5",
+   "A3-40, A3-5 Ciudadela Metropolitana y A5-6 Granabastos (aparecen en la matriz pero no tienen página)"
+  ],
+  "Pacho Galán": [
+   "A5-2 (Cra 16 con Cll 64)"
+  ],
+  "Pedro Ramayá Beltrán": [
+   "A3-1 (Cra 24 con Cll 63)",
+   "A5-1 (Cra 23B con Cll 63)"
+  ],
+  "Joaquín Barrios Polo / Estadio Metropolitano": [
+   "A1-3 (Cra 1H con Cll 45)",
+   "A2-1 (Troncal Murillo con Cra 1, Metrocentro)",
+   "A6-6 (en la estación)"
+  ],
+  "Buenos Aires": [
+   "A6-5 (Murillo con Cra 5B)",
+   "A1-4 (Cra 7 con Cll 44)"
+  ],
+  "La Ocho": [
+   "A1-2 (Cra 8 con Cll 45, Farmacia Torres)"
+  ],
+  "Atlántico": [
+   "A7-4 (Murillo con Cra 27, Éxito)"
+  ],
+  "La Arenosa": [
+   "A7-3 (Murillo con Cra 43, Ara)"
+  ]
+ },
+ "transbordos_entre_alimentadoras": [
+  "A1-3 con A2-1: Troncal Murillo con Cra 1 (Metrocentro)",
+  "A1-4 con A6-5: Cra 7 con Cll 44",
+  "A3-1 con A5-1: Cra 23B / Cra 24 con Cll 63",
+  "A5-1 con A6-6: Cll 49 con Cra 12; Av. Circunvalar con Cll 51B; Cll 77 con Cra 23D",
+  "A5-3 y A5-4 con A3-4 y A3-41: entrada de Granabastos",
+  "A6-6 con A1-3: Cra 1H con Cll 45; Cra 2E No. 44B-13",
+  "A6-6 con A2-1: Troncal Murillo con Cra 1 (Metrocentro)",
+  "A7-1 con A8-1: Cra 46 No. 81-102 / 82-100; Cll 84 No. 47-54",
+  "A7-1 con A8-2: Cra 46 No. 76-68",
+  "A7-1 con U-30: Cra 46 No. 93-94; Cra 46 con Cll 96A",
+  "A7-3 y A7-4 con A7-1: Cra 43 con Cll 76",
+  "A7-3 con A7-4: Cll 76 No. 38A-53 (Col. Betania)",
+  "A7-3 y A7-4 con A8-1, A8-2, A9-4 y U-30: Cra 46 No. 76-68",
+  "A8-1 con A9-3: Cra 53 No. 82-268 (Ocean Tower)",
+  "A8-1 con A9-4 y U-30: Cra 46 No. 81-102; Cra 46 No. 79-204",
+  "A8-2 con A8-3: Cll 75/76 con Cra 55 y Cra 57",
+  "A8-2 con A9-3: Cra 53 con Cll 78 (Villa Country); Cra 54 No. 75-56; Cll 79 con Cra 51B",
+  "A8-3 con A9-3: Cra 54 con Cll 74; Cra 54 No. 75-56",
+  "A9-4 y U-30 con A8-1: Cra 46 No. 81-102 / 82-100; Cll 84 No. 47-54",
+  "A9-4 y U-30 con A8-2: Cra 46 No. 76-68; Cll 79 No. 47-10",
+  "U-30 con A7-1: Cra 43 No. 90-128 (Edif. El Tabor)",
+  "Ruta Chévere con A8-2 y A8-1: Av. del Río (Pabellón de Cristal); Centro de Convenciones Puerta de Oro; Vía 40 con Cll 80"
+ ],
+ "rutas_troncales": [
+  {
+   "codigo": "R1",
+   "tipo": "corriente",
+   "estado": "activa",
+   "desde": "Portal de Soledad",
+   "hasta": "Estación de Retorno Joe Arroyo",
+   "paradas": [
+    "Portal de Soledad",
+    "Pacho Galán",
+    "Pedro Ramayá Beltrán",
+    "Joaquín Barrios Polo / Estadio Metropolitano",
+    "Buenos Aires",
+    "La Ocho",
+    "La Catorce",
+    "La Veintiuna",
+    "Atlántico",
+    "Chiquinquirá",
+    "La Arenosa",
+    "La Catedral",
+    "Alfredo Correa de Andréis",
+    "Esthercita Forero",
+    "Estación de Retorno Joe Arroyo"
+   ],
+   "horario": {
+    "lv": "5:00 a.m.-9:18 p.m.",
+    "sab": "5:00 a.m.-8:48 p.m.",
+    "dom_fest": "5:30 a.m.-7:50 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/r1/"
+  },
+  {
+   "codigo": "S1",
+   "tipo": "corriente",
+   "estado": "activa",
+   "desde": "Estación de Retorno Joe Arroyo",
+   "hasta": "Portal de Soledad",
+   "paradas": [
+    "Estación de Retorno Joe Arroyo",
+    "Esthercita Forero",
+    "Alfredo Correa de Andréis",
+    "La Catedral",
+    "La Arenosa",
+    "Chiquinquirá",
+    "Atlántico",
+    "La Veintiuna",
+    "La Catorce",
+    "La Ocho",
+    "Buenos Aires",
+    "Joaquín Barrios Polo / Estadio Metropolitano",
+    "Pedro Ramayá Beltrán",
+    "Pacho Galán",
+    "Portal de Soledad"
+   ],
+   "horario": {
+    "lv": "5:12 a.m.-10:00 p.m.",
+    "sab": "5:12 a.m.-9:30 p.m.",
+    "dom_fest": "5:43 a.m.-8:30 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/s1/"
+  },
+  {
+   "codigo": "B1",
+   "tipo": "corriente",
+   "estado": "activa",
+   "desde": "Portal de Soledad",
+   "hasta": "Parque Cultural del Caribe",
+   "paradas": [
+    "Portal de Soledad",
+    "Pacho Galán",
+    "Pedro Ramayá Beltrán",
+    "Joaquín Barrios Polo / Estadio Metropolitano",
+    "Buenos Aires",
+    "La Ocho",
+    "La Catorce",
+    "La Veintiuna",
+    "Atlántico",
+    "Chiquinquirá",
+    "La Arenosa",
+    "Barrio Abajo",
+    "Parque Cultural del Caribe"
+   ],
+   "horario": {
+    "lv": "5:00 a.m.-6:22 p.m.",
+    "sab": "5:00 a.m.-7:22 p.m.",
+    "dom_fest": "5:30 a.m.-6:22 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/b1/",
+   "nota": "No para en La Catedral: de La Arenosa sigue a Barrio Abajo."
+  },
+  {
+   "codigo": "S2",
+   "tipo": "corriente",
+   "estado": "activa",
+   "desde": "Parque Cultural del Caribe",
+   "hasta": "Portal de Soledad",
+   "paradas": [
+    "Parque Cultural del Caribe",
+    "Barrio Abajo",
+    "La Arenosa",
+    "Chiquinquirá",
+    "Atlántico",
+    "La Veintiuna",
+    "La Catorce",
+    "La Ocho",
+    "Buenos Aires",
+    "Joaquín Barrios Polo / Estadio Metropolitano",
+    "Pedro Ramayá Beltrán",
+    "Pacho Galán",
+    "Portal de Soledad"
+   ],
+   "horario": {
+    "lv": "5:38 a.m.-10:00 p.m.",
+    "sab": "5:38 a.m.-8:00 p.m.",
+    "dom_fest": "6:08 a.m.-7:00 p.m."
+   },
+   "actualizado_en_web": "2025-06-05",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/s2/",
+   "nota": "No para en La Catedral."
+  },
+  {
+   "codigo": "R2",
+   "tipo": "corriente",
+   "estado": "activa",
+   "desde": "Parque Cultural del Caribe",
+   "hasta": "Estación de Retorno Joe Arroyo",
+   "paradas": [
+    "Parque Cultural del Caribe",
+    "Barrio Abajo",
+    "La Catedral",
+    "Alfredo Correa de Andréis",
+    "Esthercita Forero",
+    "Estación de Retorno Joe Arroyo"
+   ],
+   "horario": {
+    "lv": "6:00 a.m.-7:45 p.m.",
+    "sab": "6:00 a.m.-7:28 p.m.",
+    "dom_fest": "7:00 a.m.-6:40 p.m."
+   },
+   "actualizado_en_web": "2025-06-05",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/r2/"
+  },
+  {
+   "codigo": "B2",
+   "tipo": "corriente",
+   "estado": "activa",
+   "desde": "Estación de Retorno Joe Arroyo",
+   "hasta": "Parque Cultural del Caribe",
+   "paradas": [
+    "Estación de Retorno Joe Arroyo",
+    "Esthercita Forero",
+    "Alfredo Correa de Andréis",
+    "La Catedral",
+    "Barrio Abajo",
+    "Parque Cultural del Caribe"
+   ],
+   "horario": {
+    "lv": "6:15 a.m.-8:00 p.m.",
+    "sab": "6:15 a.m.-7:43 p.m.",
+    "dom_fest": "7:15 a.m.-6:55 p.m."
+   },
+   "actualizado_en_web": "2025-06-05",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/b2/"
+  },
+  {
+   "codigo": "R10",
+   "tipo": "expresa",
+   "estado": "activa",
+   "desde": "Portal de Soledad",
+   "hasta": "Estación de Retorno Joe Arroyo",
+   "paradas": [
+    "Portal de Soledad",
+    "Joaquín Barrios Polo / Estadio Metropolitano",
+    "La Ocho",
+    "La Catedral",
+    "Alfredo Correa de Andréis",
+    "Esthercita Forero",
+    "Estación de Retorno Joe Arroyo"
+   ],
+   "horario": {
+    "lv": "5:37-9:37 a.m. y 3:30-8:00 p.m.",
+    "sab": "5:37-9:38 a.m.",
+    "dom_fest": "no opera"
+   },
+   "actualizado_en_web": "2026-03-10",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/r10/"
+  },
+  {
+   "codigo": "S10",
+   "tipo": "expresa",
+   "estado": "activa",
+   "desde": "Estación de Retorno Joe Arroyo",
+   "hasta": "Portal de Soledad",
+   "paradas": [
+    "Estación de Retorno Joe Arroyo",
+    "Alfredo Correa de Andréis",
+    "La Catedral",
+    "La Ocho",
+    "Joaquín Barrios Polo / Estadio Metropolitano",
+    "Portal de Soledad"
+   ],
+   "horario": {
+    "lv": "5:37-9:37 a.m. y desde 11:57 (la web dice 'p.m.', probablemente a.m.) hasta 8:30 p.m.",
+    "sab": "5:37-9:37 a.m. y 11:30 a.m.-4:00 p.m.",
+    "dom_fest": "no opera"
+   },
+   "actualizado_en_web": "2025-06-05",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/s10/",
+   "nota": "La web oficial no lista Esthercita Forero; Moovit sí la incluye."
+  },
+  {
+   "codigo": "R40",
+   "tipo": "expresa (pico mañana)",
+   "estado": "activa (la URL dice 'suspendida', pero el menú la muestra sin esa marca y tiene horario)",
+   "desde": "Pacho Galán",
+   "hasta": "Estación de Retorno Joe Arroyo",
+   "paradas": [
+    "Pacho Galán",
+    "Pedro Ramayá Beltrán",
+    "Buenos Aires",
+    "La Catedral",
+    "Alfredo Correa de Andréis",
+    "Estación de Retorno Joe Arroyo"
+   ],
+   "horario": {
+    "lv": "5:30-8:00 a.m.",
+    "sab": "no opera",
+    "dom_fest": "no opera"
+   },
+   "actualizado_en_web": "2026-02-27",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/r40-suspendida/",
+   "nota": "Moovit agrega Esthercita Forero."
+  },
+  {
+   "codigo": "S40",
+   "tipo": "expresa (pico tarde)",
+   "estado": "activa",
+   "desde": "Estación de Retorno Joe Arroyo",
+   "hasta": "Portal de Soledad",
+   "paradas": [
+    "Estación de Retorno Joe Arroyo",
+    "Alfredo Correa de Andréis",
+    "La Catedral",
+    "Buenos Aires",
+    "Pedro Ramayá Beltrán",
+    "Pacho Galán",
+    "Portal de Soledad"
+   ],
+   "horario": {
+    "lv": "4:00-7:00 p.m.",
+    "sab": "no opera",
+    "dom_fest": "no opera"
+   },
+   "actualizado_en_web": "2026-02-27",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/s40/",
+   "nota": "La web termina la lista en Pacho Galán y el texto dice que va hasta el Portal de Soledad. Moovit además muestra Esthercita Forero y La Arenosa."
+  },
+  {
+   "codigo": "B10",
+   "tipo": "expresa",
+   "estado": "SUSPENDIDA",
+   "desde": "Portal de Soledad",
+   "hasta": "Parque Cultural del Caribe",
+   "paradas": [
+    "Portal de Soledad",
+    "Joaquín Barrios Polo / Estadio Metropolitano",
+    "La Ocho",
+    "Atlántico",
+    "La Arenosa",
+    "Parque Cultural del Caribe"
+   ],
+   "horario": {
+    "lv": "5:30-8:26 a.m. (cuando operaba)"
+   },
+   "actualizado_en_web": "2022-03-30",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/b10-suspendida/"
+  },
+  {
+   "codigo": "S20",
+   "tipo": "expresa",
+   "estado": "SUSPENDIDA",
+   "desde": "Parque Cultural del Caribe",
+   "hasta": "Portal de Soledad",
+   "paradas": [
+    "Parque Cultural del Caribe",
+    "La Arenosa",
+    "Atlántico",
+    "La Ocho",
+    "Joaquín Barrios Polo / Estadio Metropolitano",
+    "Portal de Soledad"
+   ],
+   "horario": {},
+   "actualizado_en_web": "2022-03-25",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_troncales/s20-suspendida/"
+  }
+ ],
+ "rutas_alimentadoras": [
+  {
+   "codigo": "A1-2",
+   "nombre": "Carrera Ocho (en la matriz: 'Las Palmas')",
+   "estado": "activa",
+   "conecta_con_troncal_en": "La Ocho",
+   "punto_de_transbordo": "Carrera 8 con calle 45 (Farmacia Torres)",
+   "barrios": "El Campito, El Santuario, Kennedy, La Alboraya, La Magdalena, La Sierra, La Sierrita, La Unión, Las Nieves, Las Palmas, Los Continentes, Santa Helena, Tayrona",
+   "horario": {
+    "lv": "5:10 a.m.-10:17 p.m.",
+    "sab": "5:15 a.m.-9:36 p.m.",
+    "dom_fest": "6:00 a.m.-7:00 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Cra 8 con Cll 30; Cll 30 con Cra 4B; Cll 30 No. 10-220; Cra 14 con Cll 30; Cll 31 con Cra 11; Cra 8 por calles 34, 35A, 37D, 40, 42B, 45, 47, 49; Cll 51B con Cra 8B; Cra 8D con Cll 52C; Cll 53 con Cra 8G; Cll 56 con Cra 9D (SAO Macarena); Cra 10 con Cll 54; regreso por Cra 8 hasta Cll 30",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a1-2-carrera-ocho/"
+  },
+  {
+   "codigo": "A1-3",
+   "nombre": "Galán",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Joaquín Barrios Polo / Estadio Metropolitano",
+   "punto_de_transbordo": "Carrera 1H con calle 45",
+   "barrios": "Bella Arena, El Milagro, José Antonio Galán, Las Dunas, Las Palmas, Los Laureles, Tabaco Rubio, Universal I y II, Villa Blanca",
+   "horario": {
+    "lv": "5:05 a.m.-10:25 p.m.",
+    "sab": "5:15 a.m.-9:55 p.m.",
+    "dom_fest": "6:00 a.m.-8:55 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Cra 1H con Cll 45; Cra 2E/2B/2 hacia el sur hasta Cll 37C; Cll 37C con Cra 3A; Cra 4 por calles 36, 34B, 30 (Coltabaco); Cll 30 con Cra 2 (Coomeva); Cra 2 por calles 30 (Col. San José), 33A, 34, 35A; Cra 1H por calles 37F, 41B; Cra 1H con Cll 45",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a1-3-galan/"
+  },
+  {
+   "codigo": "A1-4",
+   "nombre": "La Magdalena",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Buenos Aires",
+   "punto_de_transbordo": "Carrera 7 con calle 44",
+   "barrios": "Buenos Aires, José Antonio Galán, La Magdalena, Las Palmas, Limón, Tabaco Rubio, Tayrona",
+   "horario": {
+    "lv": "5:10 a.m.-10:23 p.m.",
+    "sab": "5:15 a.m.-9:55 p.m.",
+    "dom_fest": "6:00 a.m.-7:00 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Cra 7 con Cll 44; Cra 7C con Cll 42; Cra 6B por calles 41, 38B, 36B, 34C, 33, 30; Cra 4B No. 23-57; Cll 19 con Cra 4A; Cra 4B con Cll 23; regreso por Cra 6B (Nacional de Chocolate, Cll 31) hasta Cra 7 con Cll 44",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a1-4-la-magdalena/"
+  },
+  {
+   "codigo": "A2-1",
+   "nombre": "Hipódromo",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Joaquín Barrios Polo / Estadio Metropolitano",
+   "punto_de_transbordo": "Troncal Murillo con carrera 1 (Metrocentro)",
+   "barrios": "Soledad: Barrio Centro, Calle de las Flores, Ciudadela 20 de Julio, El Carnero, El Centenario, El Hipódromo, El Oriental, El Pasito, El Porvenir, El Tucán, La Arboleda, La María, Las Marinas, Los Arrayanes, San Antonio, Simón Bolívar, Urb. El Parque, Villa Blanca, Villa Cecilia, Villa del Carmen",
+   "horario": {
+    "lv": "4:45 a.m.-10:25 p.m.",
+    "sab": "4:45 a.m.-9:58 p.m.",
+    "dom_fest": "6:00 a.m.-8:55 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Cll 45 con Cra 1 (Metrocentro); Av. Las Torres (Circunvalar) hacia Soledad; Cll 30 (Col. ITIDA); Cra 30 con Cll 30 (SAO Hipódromo); Cra 30 por calles 29, 27, 24, 23, 18; Cll 18 por carreras 27, 25A, 23, 21; Cra 19 No. 20-19; Cll 23 por carreras 19A, 22, 25; Cra 26; Cll 30 con Cra 34A (entrada al Tucán); Cll 30 (Col. INEM); Av. Las Torres de regreso a Metrocentro",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a2-1-hipodromo/"
+  },
+  {
+   "codigo": "A3-1",
+   "nombre": "Villa Katanga",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Pedro Ramayá Beltrán",
+   "punto_de_transbordo": "Carrera 24 con calle 63",
+   "barrios": "Costa de Oro, El Éxito, La Arboleda, Las Trinitarias, Muvdi, Urb. Las Moras, Urb. Parque Muvdi, Villa Katanga I y II (llega a C.C. Plaza del Sol)",
+   "horario": {
+    "lv": "5:00 a.m.-10:28 p.m.",
+    "sab": "5:00 a.m.-9:58 p.m.",
+    "dom_fest": "6:00 a.m.-7:00 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Cra 24 por calles 63, 59, 57D, 55B, 54, 48, 45A2; Cll 45 con Cra 25/26A; Cra 30 con Cll 40 y Cll 30; Cll 35 con Cra 30; Cll 43 por carreras 31, 37, 32; Cll 45 con Cra 26/24B; Cra 24 por calles 48, 53, 54C; Cll 56 con Cra 22C/20; Cra 18 por calles 56, 59, 62; Cra 24 con Cll 63",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a3-1-villa-katanga/"
+  },
+  {
+   "codigo": "A3-2",
+   "nombre": "Soledad 2000",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Portal de Soledad",
+   "punto_de_transbordo": "Portal de Soledad",
+   "barrios": "Normandía, Bella Murillo, Ciudadela Metropolitana, El Oasis, La Fe, La Ferruca, La Inmaculada, Los Cusules, Nueva Jerusalén, Nuevo Milenio, Soledad 2000, Tajamar I y II, Urb. Terranova II, Urb. Villa Mónaco, Urb. Villa Soledad, Villa Estefany, Villa Rosa",
+   "horario": {
+    "lv": "4:45 a.m.-10:35 p.m.",
+    "sab": "4:45 a.m.-10:07 p.m.",
+    "dom_fest": "5:30 a.m.-9:07 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Portal; Cra 14 con Cll 62/59 (Nuevo Milenio); Cll 59; Cra 12 con Cll 56; Cra 13 con Cll 54; Cra 11 por calles 52 (Siete Bocas), 49 (Polideportivo Soledad 2000), 46, 44 (Col. Club de Leones); Cll 43; Cll 41 (Alcaldía de Soledad) hasta Cra 19; Cll 48 con Cra 16A; Cra 14 por calles 47, 50, 52; Cra 12 por calles 57-64C; Cll 65 (Terranova); Portal",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a3-2-soledad-2000/"
+  },
+  {
+   "codigo": "A3-3",
+   "nombre": "Manuela Beltrán",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Portal de Soledad",
+   "punto_de_transbordo": "Portal de Soledad",
+   "barrios": "Bella Murillo, Ciudadela Metropolitana, La Inmaculada, La Puerta de Oro, Manuela Beltrán, Nuevo Milenio, Soledad 2000, Villa Adela, Villa Estadio, Villa Rosa (llega a C.C. Carnaval)",
+   "horario": {
+    "lv": "4:45 a.m.-10:37 p.m.",
+    "sab": "4:45 a.m.-10:07 p.m.",
+    "dom_fest": "5:30 a.m.-9:05 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Portal; Cra 14 (Terminal de Transportes); Cll 54 (El Percal); Cra 11 por calles 52, 49, 46, 44, 41, 39 (Iglesia San Luis Beltrán), 37; Cll 37 hasta C.C. Carnaval; Cll 37 por carreras 9B, 7C, 7; Cll 36E; Cra 5A; Cll 47; Cra 6C; Cll 49; Cll 50 por carreras 8, 10, 11B, 13A; Cra 14; Cra 15 (Puerta de Oro, Villa Linda); Portal",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a3-3-manuela-beltran/"
+  },
+  {
+   "codigo": "A3-31",
+   "nombre": "Aeropuerto",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Portal de Soledad",
+   "punto_de_transbordo": "Portal de Soledad",
+   "barrios": "Soledad (mismo recorrido de la A3-3) hasta el Aeropuerto Ernesto Cortissoz por la Calle 30",
+   "horario": {
+    "lv": "4:45 a.m.-10:35 p.m.",
+    "sab": "4:45 a.m.-10:05 p.m.",
+    "dom_fest": "5:30 a.m.-7:00 p.m."
+   },
+   "actualizado_en_web": "2026-10-13",
+   "paraderos": "Portal; Cra 14; Terminal de Transportes; Cll 54; Cra 11; Cll 37; C.C. Carnaval; Cll 30 (Pirotécnicos, Localiza); Aeropuerto Internacional Ernesto Cortissoz; Cll 10A con Cra 39/41; regreso por Cll 30, C.C. Carnaval, Cll 37, Cll 47, Cll 50, Cra 14, Cra 15; Portal",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a3-31-aeropuerto/"
+  },
+  {
+   "codigo": "A3-4",
+   "nombre": "Villa Sol",
+   "estado": "activa (confuso: la URL dice 'a3-40 ... suspendida' y el texto la llama refuerzo de la A3-4)",
+   "conecta_con_troncal_en": "Portal de Soledad",
+   "punto_de_transbordo": "Portal de Soledad; transbordo con A5-3 y A5-4 en entrada de Granabastos",
+   "barrios": "Bella Jerusalén, Ciudad Caribe, Ciudad Transmetro, La Candelaria I y II, La Central, Las Cometas, Los Loteros, Nuevo Milenio, San Vicente, Urb. Terranova II, Villa Esther, Villa María, Villa Murillo, Villa Sol",
+   "horario": {
+    "lv": "4:45 a.m.-10:36 p.m.",
+    "sab": "4:45 a.m.-10:05 p.m.",
+    "dom_fest": "5:30 a.m.-9:07 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Portal; C.C. Nuestro Atlántico; Cll 65 (Ciudad Transmetro, Los Loteros, Ciudad Camelot, La Candelaria, La Central, Granabastos); Diagonal 56 (Las Cometas, Mega Colegio, Villa María); Cll 57 con Cra 3; Cra 3; Cll 54B; regreso por Diagonal 56 y Cll 65; Portal",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a3-40-villa-sol-suspendida/"
+  },
+  {
+   "codigo": "A3-41",
+   "nombre": "Villa Karla",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Portal de Soledad",
+   "punto_de_transbordo": "Portal de Soledad; transbordo con A5-3 y A5-4 en entrada de Granabastos",
+   "barrios": "Ciudad Caribe, Ciudad Transmetro, La Candelaria II, La Central, Las Cometas, Los Loteros, Nueva Esperanza, Nuevo Milenio, Urb. Terranova II, Villa Karla, Villa María, Villa Murillo",
+   "horario": {
+    "lv": "4:45 a.m.-10:35 p.m.",
+    "sab": "4:45 a.m.-10:05 p.m.",
+    "dom_fest": "5:30 a.m.-9:05 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Portal; Cll 65 hasta Granabastos; Diagonal 56; Cra 4E/4B por calles 56-57D; regreso por Diagonal 56 y Cll 65; Portal",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a3-41-villa-karla/",
+   "nota": "Refuerzo de la A3-4 en horas pico."
+  },
+  {
+   "codigo": "A4-1",
+   "nombre": "Malambo",
+   "estado": "SUSPENDIDA TEMPORALMENTE",
+   "conecta_con_troncal_en": "Portal de Soledad",
+   "punto_de_transbordo": "Portal de Soledad",
+   "barrios": "Malambo: Ciudad Caribe Real, C.C. Plaza Malambo, Centro Logístico Olímpica, Urb. La Luna",
+   "horario": {
+    "lv": "4:30 a.m.-8:00 p.m.",
+    "sab": "4:30 a.m.-7:00 p.m.",
+    "dom_fest": ""
+   },
+   "actualizado_en_web": "2026-03-16",
+   "paraderos": "Portal; Av. Murillo (Ciudad Caribe Real, vía Caracolí-Malambo); Diagonal 18 (EDS Zeus, C.C. Plaza Malambo); Troncal de Occidente (Centro Logístico Olímpica); regreso igual",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a4-1-malambo/"
+  },
+  {
+   "codigo": "A5-1",
+   "nombre": "Los Robles / Los Almendros",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Pedro Ramayá Beltrán",
+   "punto_de_transbordo": "Carrera 23B con calle 63",
+   "barrios": "Ciudadela 20 de Julio, Jardín de Villa Estadio, Los Almendros I y III, Los Cerezos, Los Robles, Villa Estadio II, Villa Sevilla",
+   "horario": {
+    "lv": "4:45 a.m.-10:28 p.m.",
+    "sab": "4:50 a.m.-9:58 p.m.",
+    "dom_fest": "6:00 a.m.-8:58 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Cra 23B con Cll 63; Cra 18 Sur / Cra 24 (Soledad); Cll 74; Cra 23A; Cll 77; Cll 79 por carreras 23B-18; Cll 83; Cra 12D; Cll 84; regreso por Cll 81, Cra 22B, Cll 77, Cra 23A; Cra 15 Sur; Av. Circunvalar con Cll 45H (puente peatonal Velódromo); Cra 23B con Cll 63",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a5-1-los-robles/"
+  },
+  {
+   "codigo": "A5-2",
+   "nombre": "Las Moras",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Pacho Galán",
+   "punto_de_transbordo": "Carrera 16 con calle 64 esquina",
+   "barrios": "Altos de Sevilla, Los Cedros, Moras Norte, Moras Occidente, Urb. Terranova, Villa Estadio, Villa Estadio Sector Norte, Villa Las Moras II",
+   "horario": {
+    "lv": "5:10 a.m.-10:30 p.m.",
+    "sab": "5:00 a.m.-10:00 p.m.",
+    "dom_fest": "6:00 a.m.-9:00 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Cra 16 con Cll 64 (est. Pacho Galán); Cra 16 con Cll 68; Cra 15 con Cll 69 (Centro de Salud Adela de Char); Cra 16 No. 73-26; Cll 74A; Cll 76; Cra 19 por calles 74A, 72B; Cra 18 por calles 70, 68C, 65; Cra 16 con Cll 64",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a5-2-las-moras/"
+  },
+  {
+   "codigo": "A5-3",
+   "nombre": "La Central",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Portal de Soledad",
+   "punto_de_transbordo": "Portal de Soledad; transbordo con A3-4 y A3-41 en Granabastos",
+   "barrios": "Ciudad Caribe, Ciudad Transmetro, Don Bosco, La Central, Los Loteros, Nuevo Milenio, San Bernardo, Urb. Terranova II, Villa Murillo",
+   "horario": {
+    "lv": "4:50 a.m.-10:35 p.m.",
+    "sab": "4:50 a.m.-10:05 p.m.",
+    "dom_fest": "5:30 a.m.-9:05 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Portal; Cll 65 hasta La Central; Cra 5 por calles 66C, 68B; Cll 69; Cra 4; Diagonal 71/72 (Cancha Don Bosco); regreso por Cra 4, Cra 5, Cll 65 (Granabastos, EDS La Inmaculada); Portal",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a5-3-la-central/"
+  },
+  {
+   "codigo": "A5-4",
+   "nombre": "San Antonio",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Portal de Soledad",
+   "punto_de_transbordo": "Portal de Soledad; transbordo con A3-4 y A3-41 en Granabastos",
+   "barrios": "Ciudad Caribe, Ciudad Salitre, Ciudad Transmetro, La Central, Los Loteros, Nuevo Milenio, Urb. Terranova II, Villa Murillo",
+   "horario": {
+    "lv": "4:50 a.m.-10:35 p.m.",
+    "sab": "4:50 a.m.-10:05 p.m.",
+    "dom_fest": "5:30 a.m.-9:05 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Portal; Cll 65 hasta La Central; Urb. Salitre San Antonio; Conj. Níspero 2; Cll 68A; Conj. Caoba; regreso por Cll 65; Portal",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a5-4-san-antonio/"
+  },
+  {
+   "codigo": "A5-5",
+   "nombre": "Manantial",
+   "estado": "activa, opera con desvío",
+   "conecta_con_troncal_en": "Portal de Soledad",
+   "punto_de_transbordo": "Portal de Soledad",
+   "barrios": "Ciudad Caribe, Ciudad Transmetro, El Manantial, Nuevo Milenio, Urb. Terranova II",
+   "horario": {
+    "lv": "4:50 a.m.-10:35 p.m.",
+    "sab": "4:50 a.m.-10:05 p.m.",
+    "dom_fest": "5:30 a.m.-9:05 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Portal; C.C. Nuestro Atlántico; Cra 13 por calles 66-69; Cll 71; Cll 70 (Altos de los Manantiales, Ciudad del Parque); Cll 75; Cll 76 (Parque Cocuy); Cra 12 por calles 74-66 (Olímpica, Megaparque de las Flores); Cll 65; Portal",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a5-5-manantial/"
+  },
+  {
+   "codigo": "A6-5",
+   "nombre": "Carrizal",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Buenos Aires",
+   "punto_de_transbordo": "Troncal Murillo (Calle 45) con carrera 5B",
+   "barrios": "Buenos Aires, Carrizal, Ciudadela 20 de Julio, El Santuario y otros del suroccidente",
+   "horario": {
+    "lv": "5:20 a.m.-10:23 p.m.",
+    "sab": "5:20 a.m.-9:53 p.m.",
+    "dom_fest": "6:00 a.m.-7:02 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Cll 45 con Cra 5B; Cra 4 por calles 45B, 45H; Cll 49 por carreras 3D, 3, 2G; Cra 2F; Cll 50C; Cra 2 por calles 50D, 51; Cll 51B; regreso por Cra 2F y Cll 49; Cll 45 con Cra 5B",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a6-5-carrizal/"
+  },
+  {
+   "codigo": "A6-6",
+   "nombre": "Ciudadela",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Joaquín Barrios Polo / Estadio Metropolitano",
+   "punto_de_transbordo": "Estación Joaquín Barrios Polo",
+   "barrios": "7 de Abril, Ciudadela 20 de Julio",
+   "horario": {
+    "lv": "5:30 a.m.-9:32 p.m.",
+    "sab": "5:30 a.m.-10:33 p.m.",
+    "dom_fest": "5:30 a.m.-8:55 p.m."
+   },
+   "actualizado_en_web": "2026-03-19",
+   "paraderos": "Est. Joaquín Barrios Polo; Av. Las Torres con Cll 45/45H; Cra 6 Sur por calles 46F-48F; Cll 49 por carreras 8B Sur, 12 Sur; Av. Circunvalar con Cll 51B; Cra 10 Sur; Cll 49 (PASO Nueva Vida); Cra 1; Cll 47; Est. Joaquín Barrios Polo",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a6-6-ciudadela/"
+  },
+  {
+   "codigo": "A7-1",
+   "nombre": "Miramar",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Estación de Retorno Joe Arroyo",
+   "punto_de_transbordo": "Estación Joe Arroyo",
+   "barrios": "Altamira, América, Ciudad Jardín, Colombia, El Poblado, El Porvenir, El Tabor, Granadillo, La Campiña, La Cumbre, Los Alpes, Los Nogales, Miramar, Villa Santos",
+   "horario": {
+    "lv": "5:30 a.m.-10:03 p.m.",
+    "sab": "5:30 a.m.-9:30 p.m.",
+    "dom_fest": "6:00 a.m.-8:30 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Est. Joe Arroyo; Cll 76; Cra 43 por calles 76-87; Cll 90 (Edif. Tabor); Cra 42B1; Cll 96; Cra 42F; Cll 98; Cra 43 (Parque 100); Cll 100; Cra 46 por calles 96A, 94, 90 (Uniautónoma), 85, 82, 80, 79 (Pérez Radiólogos), 76; Est. Joe Arroyo",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a7-1-miramar/"
+  },
+  {
+   "codigo": "A7-3",
+   "nombre": "Carrera 38",
+   "estado": "activa, opera con desvío",
+   "conecta_con_troncal_en": "Estación de Retorno Joe Arroyo; también La Arenosa",
+   "punto_de_transbordo": "Estación Joe Arroyo; Troncal Murillo con carrera 43 (Ara) para La Arenosa",
+   "barrios": "América, Betania, Boston, Centro, Ciudad Jardín, Colombia, El Porvenir, El Recreo, El Rosario, Las Delicias, Las Mercedes, Mercedes Sur, Olaya",
+   "horario": {
+    "lv": "5:30 a.m.-10:00 p.m.",
+    "sab": "5:30 a.m.-9:30 p.m.",
+    "dom_fest": "6:00 a.m.-7:00 p.m."
+   },
+   "actualizado_en_web": "2026-10-26",
+   "paraderos": "Est. Joe Arroyo; Cll 76 (U. Metropolitana, C.C. Único, Col. Betania); Cra 38 por calles 74-54 (U. Reformada, Club de Leones, Clínica La Merced); Cll 52; Cra 41 (UniAtlántico Centro); Cra 44 con Cll 48/45 (Comfamiliar); Cra 43 con Cll 45 (Ara), Cll 50 (Parque Central), Cll 53; Cll 54 (Col. Colón); Cra 38 de regreso; Cll 76; Cll 79; Cra 46; Est. Joe Arroyo",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a7-3-carrera-38/"
+  },
+  {
+   "codigo": "A7-4",
+   "nombre": "Los Andes",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Estación de Retorno Joe Arroyo; también Atlántico",
+   "punto_de_transbordo": "Estación Joe Arroyo; Troncal Murillo con carrera 27 (Éxito) para Atlántico",
+   "barrios": "Alfonso López, América, Ciudad Jardín, Ciudadela de la Salud, Colombia, El Porvenir, El Silencio, El Valle, Las Colinas, Las Mercedes, Los Andes, Me Quejo, Mercedes Sur, Nueva Granada, Olaya, Pumarejo, San Felipe, San Isidro",
+   "horario": {
+    "lv": "5:28 a.m.-10:01 p.m.",
+    "sab": "5:24 a.m.-9:32 p.m.",
+    "dom_fest": "6:00 a.m.-7:00 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Est. Joe Arroyo; Cll 76; Cll 79A (Parque Las Mercedes); Cra 26C7; Cra 27 por calles 72C, 68 (Col. Olaya), 64 (Megamás), 61 (Parque Los Andes); Cra 24 por calles 59-48; Cra 27 con Cll 45 (Éxito Murillo); Cra 26; Cll 48; Cra 23; Cra 21B por calles 53D-68C; Cll 70C; Cra 27; Cll 79A; Cll 76; Cll 79; Cra 46; Est. Joe Arroyo",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a7-4-los-andes/"
+  },
+  {
+   "codigo": "A8-1",
+   "nombre": "Paraíso",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Estación de Retorno Joe Arroyo",
+   "punto_de_transbordo": "Estación Joe Arroyo",
+   "barrios": "Alto Prado, América, Andalucía, Colombia, El Castillo, El Golf, El Limoncito, El Porvenir, Granadillo, La Floresta, Las Tres Ave Marías, Paraíso, Riomar, San Salvador, San Vicente, Solaire Norte, Villa del Este",
+   "horario": {
+    "lv": "5:30 a.m.-10:00 p.m.",
+    "sab": "5:41 a.m.-10:30 p.m.",
+    "dom_fest": "6:00 a.m.-8:31 p.m."
+   },
+   "actualizado_en_web": "2026-10-26",
+   "paraderos": "Est. Joe Arroyo; Cra 46 por calles 76-82; Cll 84 por carreras 47-59B; Cra 65; Cll 86 (Villa Andalucía); Cll 84; Cll 85; Vía 40 con Cll 80/83; Cll 80 por carreras 78-65; Cra 64; Cll 82 por carreras 59B-47 (Carulla, Comfamiliar); Cra 46; Est. Joe Arroyo",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a8-1-paraiso/"
+  },
+  {
+   "codigo": "A8-2",
+   "nombre": "Vía 40",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Estación de Retorno Joe Arroyo",
+   "punto_de_transbordo": "Estación Joe Arroyo",
+   "barrios": "Alto Prado, América, Colombia, El Golf, El Porvenir, La Concepción, Sector Industrial II - Vía 40, Villa Country",
+   "horario": {
+    "lv": "5:30 a.m.-10:00 p.m.",
+    "sab": "5:30 a.m.-9:31 p.m.",
+    "dom_fest": "6:00 a.m.-8:30 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Est. Joe Arroyo; Cra 46 No. 76-68; Cll 79 por carreras 47-57; Cll 77 (Sutherland) hasta Vía 40 (Outlet Continente); Avenida del Río (Manglares del Río, Pabellón de Cristal, Cll 72); Vía 40; Cll 76 (Kia, Zoológico, Combarranquilla, Country Club, Parque Karl C. Parrish, Olímpica); Est. Joe Arroyo",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a8-2-via-40/"
+  },
+  {
+   "codigo": "A8-3",
+   "nombre": "Prado",
+   "estado": "activa",
+   "conecta_con_troncal_en": "La Catedral, Barrio Abajo y Parque Cultural del Caribe",
+   "punto_de_transbordo": "Estaciones La Catedral, Barrio Abajo y Parque Cultural",
+   "barrios": "Alto Prado, Barrio Abajo, Boston, Centro, El Prado, El Rosario, Montecristo",
+   "horario": {
+    "lv": "5:30 a.m.-9:25 p.m.",
+    "sab": "5:30 a.m.-7:26 p.m.",
+    "dom_fest": "no opera"
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Est. Parque Cultural; Est. Barrio Abajo; Est. La Catedral; Cll 55 por carreras 46-53; Cra 54 por calles 58-74; Cll 75 con Cra 55/57; Cra 58 por calles 74-66; Cra 54 de regreso; Cll 54; Est. La Catedral; Barrio Abajo; Parque Cultural",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a8-3-prado/"
+  },
+  {
+   "codigo": "A9-3",
+   "nombre": "Buenavista",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Estación de Retorno Joe Arroyo",
+   "punto_de_transbordo": "Estación Joe Arroyo",
+   "barrios": "Altamira, Alto Prado, Altos de Riomar, Altos del Limón, América, Buenavista, Colombia, El Poblado, El Porvenir, El Prado, Riomar, San Vicente, Santa Mónica, Villa Country, Villa Santos",
+   "horario": {
+    "lv": "5:30 a.m.-10:00 p.m.",
+    "sab": "5:30 a.m.-9:30 p.m.",
+    "dom_fest": "6:00 a.m.-8:30 p.m."
+   },
+   "actualizado_en_web": "2025-11-25",
+   "paraderos": "Est. Joe Arroyo; Cll 74; Cra 54; Cra 53 por calles 78 (Villa Country), 80 (Parque Washington), 82 (Ocean Tower), 85, 89, 91; Cll 94; Cra 64; Cll 98 (Mall 98, C.C. Buenavista); Cra 51B por calles 96A-76; Cll 76; Est. Joe Arroyo",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/a9-3-buenavista/"
+  },
+  {
+   "codigo": "A9-4",
+   "nombre": "Carrera 46 (solo fines de semana)",
+   "estado": "activa",
+   "conecta_con_troncal_en": "Estación de Retorno Joe Arroyo",
+   "punto_de_transbordo": "Estación Joe Arroyo",
+   "barrios": "Altamira, América, Buenavista, Colombia, El Poblado, El Porvenir, Granadillo, La Campiña, Miramar, Paseo de la Castellana, San Vicente, Villa Santos, Ciudad Mallorquín",
+   "horario": {
+    "lv": "no opera",
+    "sab": "5:10 p.m.-9:30 p.m.",
+    "dom_fest": "6:00 a.m.-8:30 p.m."
+   },
+   "actualizado_en_web": "2025-11-20",
+   "paraderos": "Est. Joe Arroyo; Cra 46 por calles 76-91 (Uniautónoma); Cll 93 (Ara El Poblado); Cra 51B hasta Cll 106 (Makro); Corredor Universitario (Col. Karl C. Parrish, Jardines del Recuerdo); regreso por Cra 51B, Cll 96, Cra 46; Est. Joe Arroyo",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/u30-universidades-fines-de-semana/"
+  },
+  {
+   "codigo": "U-30",
+   "nombre": "Universidades",
+   "estado": "activa, opera con desvío",
+   "conecta_con_troncal_en": "Estación de Retorno Joe Arroyo",
+   "punto_de_transbordo": "Estación Joe Arroyo",
+   "barrios": "Corredor Universitario: Altamira, América, Buenavista, Colombia, El Poblado, El Porvenir, Granadillo, La Campiña, Miramar, Paseo de la Castellana, San Vicente, Villa Santos, Villa Campestre, Ciudad Mallorquín",
+   "horario": {
+    "lv": "5:30 a.m.-10:00 p.m.",
+    "sab": "5:30 a.m.-5:00 p.m.",
+    "dom_fest": "no opera"
+   },
+   "actualizado_en_web": "2026-08-27",
+   "paraderos": "Est. Joe Arroyo; Cra 46 por calles 76-91; Cll 93; Cra 51B hasta Cll 106 (Makro); Corredor Universitario (Col. Karl C. Parrish, Universidad del Norte, Club Campestre, Col. Británico, Col. Alemán, Villa Campestre, Olímpica Ciudad del Mar, U. Antonio Nariño, U. San Martín, Comfamiliar); regreso por Cra 51B, Cll 96, Cra 46; Est. Joe Arroyo",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/u-30-universidades/"
+  },
+  {
+   "codigo": "Ruta Chévere",
+   "nombre": "Ruta turística",
+   "estado": "activa",
+   "conecta_con_troncal_en": "ninguna estación troncal",
+   "punto_de_transbordo": "Transbordo con A8-2 (Av. del Río, Pabellón de Cristal) y A8-1 (Centro de Convenciones Puerta de Oro; Vía 40 con Cll 80)",
+   "barrios": "Gran Malecón, Ventana de Campeones, Ventana al Mundo, Ciénaga de Mallorquín, Estación del Tren de Puerto Mocho",
+   "horario": {
+    "lv": "no opera",
+    "sab": "11:40 a.m.-5:30 p.m.",
+    "dom_fest": "11:40 a.m.-5:30 p.m."
+   },
+   "actualizado_en_web": "2025-07-29",
+   "paraderos": "Av. del Río (Pabellón de Cristal, Cll 72, Estatua de Shakira, Ventana de Campeones); Centro de Convenciones Puerta de Oro; Vía 40 con Cll 106; Estación del Tren de Puerto Mocho; Senderos Estuario y Manglar; Ventana al Mundo; Vía 40; Cll 76; Cll 77; Av. del Río",
+   "fuente": "https://transmetro.gov.co/sistema/rutas_alimentadoras/ruta-chevere/",
+   "nota": "Salidas: 11:40 a.m., 12:50, 2:00, 3:10, 4:20 y 5:30 p.m."
+  }
+ ],
+ "rutas_complementarias": "La web oficial no publica rutas complementarias.",
+ "horario_general_sistema": {
+  "lv": "5:00 a.m.-10:00 p.m.",
+  "sab": "5:00 a.m.-9:30 p.m.",
+  "dom_fest": "5:30 a.m.-8:30 p.m."
+ },
+ "dudas_y_vacios": [
+  "R40: la dirección de la página dice 'suspendida', pero el menú la muestra sin esa marca y tiene horario (actualizado feb 2026). Se trató como activa.",
+  "S10 y R40: la web no lista Esthercita Forero; Moovit sí. S40: la web no lista La Arenosa ni Esthercita; Moovit sí.",
+  "S10: el horario dice '11:57 p.m. a 8:30 p.m.', probablemente es 11:57 a.m.",
+  "A3-4 Villa Sol: la dirección dice 'a3-40 ... suspendida', pero el menú la muestra activa.",
+  "Matriz de transbordos: menciona A3-40, A3-5 Ciudadela Metropolitana y A5-6 Granabastos, que no tienen página propia.",
+  "Gran Malecón y Ruta Navideña aparecen en el inicio pero sus páginas están vacías (posiblemente estacionales).",
+  "R50 (mencionada en Wikipedia) no existe en la web oficial.",
+  "Las páginas de alimentadoras listan paraderos, no un mapa por calles; la ubicación de un barrio se busca por el campo 'barrios' o 'paraderos'."
+ ]
+}
