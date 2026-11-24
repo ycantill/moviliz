@@ -94,6 +94,8 @@ Si cambias `data/raw/` o `scripts/build-data.mjs`, regenera y sube `data/transme
 - Ramas `claude/<tema>`, un PR por cambio, en español. La dueña fusiona.
 - **Actualiza el `README.md` en cada cambio** que afecte lo que hace la app o cómo se usa,
   y este archivo si cambia una regla o convención.
+- El README tiene una sección técnica en inglés (*Technical overview*) para quien revisa el
+  código. Si cambias la arquitectura, las pruebas o las cifras del grafo, actualízala también.
 - Textos de la interfaz en español de Colombia, sencillos.
 - La app no debe tener scroll horizontal en un celular de 390 px; `tests/e2e` lo verifica.
 - Si cambias la interfaz, agrega o ajusta la prueba E2E correspondiente.
