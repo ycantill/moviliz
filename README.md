@@ -43,3 +43,10 @@ Pages) y elegir "Agregar a la pantalla de inicio".
 - Los transbordos son gratis dentro de 105 minutos; entre troncales solo dentro del sistema.
 
 Al cambiar la base, sube `VERSION` en `sw.js` para que los teléfonos descarguen la nueva app.
+
+## Publicación
+
+Cada cambio en `main` se publica en GitHub Pages con `.github/workflows/pages.yml`
+(corre las pruebas, genera los datos y sube la app). La dirección queda en
+https://ycantill.github.io/moviliz/. En el repositorio, *Settings → Pages →
+Source* debe estar en **GitHub Actions**.
