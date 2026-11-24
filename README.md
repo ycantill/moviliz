@@ -1,5 +1,7 @@
 # Moviliz
 
+> **English:** an offline-first PWA that plans bus trips on Barranquilla's Transmetro BRT system, entirely on the device. See the [technical overview](#technical-overview) below.
+
 App web (PWA) para planear viajes en **Transmetro Barranquilla** sin conexión.
 Escribes un origen y un destino (dirección, estación o paradero) y la app
 te dice qué rutas tomar, dónde subir, dónde bajar y cuánto caminar.
@@ -57,3 +59,56 @@ https://ycantill.github.io/moviliz/. En el repositorio, *Settings → Pages →
 Source* debe estar en **GitHub Actions**.
 
 No hace falta cambiar nada para actualizar: en cada publicación el workflow pone el commit como versión de `sw.js`. Con internet la app siempre pide primero la versión más reciente de cada archivo y, sin conexión, usa la copia guardada. Al publicarse una versión nueva, la app se recarga sola una vez.
+
+## Technical overview
+
+Moviliz is a small, dependency-free Progressive Web App that answers *"which buses do I take from here to there?"* for Transmetro, the bus rapid transit system of Barranquilla, Colombia. It works with no network connection: there is no backend, no third-party API and no build step. The interface is in Spanish because its users are local.
+
+**Live:** https://ycantill.github.io/moviliz/
+
+### Stack and why
+
+| Choice | Reason |
+| --- | --- |
+| Vanilla JavaScript (ES modules), no framework | ~1,000 lines of app code and a single screen. A framework would add a build step and bundle weight without solving a real problem. |
+| Types with JSDoc + `tsc --noEmit` (strict) | Static checking of the domain model (`src/types.d.ts`) while the shipped code stays plain JS. |
+| Service worker + IndexedDB | The app and the 128 KB route database must survive with no signal, which is common on a moving bus. |
+| Custom Dijkstra in the browser | The network is small (820 nodes), so the search runs on the device and nothing about the trip leaves it. |
+| GitHub Actions + GitHub Pages | Static hosting over HTTPS, which installable PWAs require. |
+
+### Architecture
+
+```
+data/raw/  ──(scripts/build-data.mjs)──►  data/transmetro.json
+                                               │
+index.html ─► src/app.js (UI, ARIA combobox, rendering)
+                 ├─ src/store.js   load data: network first, IndexedDB copy offline
+                 ├─ src/router.js  search index + trip planner (Dijkstra)
+                 └─ src/geo.js     address parsing, block distances, GPS → street grid
+sw.js  service worker: versioned cache, network first with an offline fallback
+```
+
+### Trip planning
+
+- **Graph.** 17 stations and the stops of 40 routes become 820 nodes, with 911 ride edges and 8,266 short walking edges for transfers. Building the index takes about 10 ms and a query about 0.3 ms on an Apple M4 laptop, so the planner runs on the main thread. A Web Worker would add complexity for no visible gain.
+- **State space.** Dijkstra runs over `node|boardings` (on foot) and `R:route:position|boardings` (on board) states. Keeping the boarding count in the key enforces the fare rule of at most two transfers, and it lets the planner tell "stay on the bus" apart from "get off and transfer".
+- **Profiles.** The edge weights for walking, boarding and riding change with the profile: *walk less* or *fewer transfers*. The app runs both profiles and shows the second as an alternative when it gives a different route.
+- **Timetables.** Free-text schedules from the official site (`"5:37-9:37 a.m. y 3:30-8:00 p.m."`) are parsed into minute ranges, so closed routes are excluded at the chosen departure time.
+
+### Geolocation without a geocoding service
+
+Barranquilla's addresses follow a numbered grid of *calles* and *carreras*, so `"Cra 43 # 70-15"` maps directly to grid coordinates and distances are measured in blocks. To use the phone's GPS offline, `latLonToGrid` takes the 8 nearest of 1,111 street corners extracted from OpenStreetMap and fits a local plane by weighted least squares (solved with Cramer's rule). That turns latitude and longitude into a street and avenue number to within about half a block. The location never leaves the device.
+
+### Offline and updates
+
+- The service worker pre-caches the app shell and data under a cache name that CI stamps with the commit SHA, so every deploy installs a fresh worker and deletes old caches.
+- Requests go to the network first with a 4-second timeout and fall back to the cached copy. Users get the latest deploy when online and a working app when offline, without ever clearing the cache by hand.
+- The route database is also kept in IndexedDB, and the page reloads once when a new worker takes control.
+
+### Quality
+
+- **Unit tests** (`node:test`): address parsing, timetable parsing, routing between stations and addresses, closed routes at night, GPS conversion.
+- **End-to-end tests** (Playwright, 390 px mobile viewport): the full keyboard flow, recent trips, **planning a trip with the browser offline** after the first visit, no horizontal scroll, **axe-core WCAG 2.1 AA** with no violations, and no Content Security Policy violations.
+- **Accessibility:** origin and destination fields follow the WAI-ARIA 1.2 combobox pattern (`aria-expanded`, `aria-activedescendant`, arrow keys, Enter and Escape), and a live region announces suggestion counts.
+- **Security:** strict CSP (`default-src 'self'`, no inline scripts or styles), all dynamic text is HTML-escaped before rendering, and the dev server refuses path traversal.
+- **CI** on every pull request: ESLint, strict type-check, a check that the generated data matches its sources, unit tests and E2E tests. The deploy workflow repeats the checks before publishing.
