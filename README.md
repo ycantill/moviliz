@@ -4,12 +4,16 @@ App web (PWA) para planear viajes en **Transmetro Barranquilla** sin conexión.
 Escribes un origen y un destino (dirección, estación o paradero) y la app
 te dice qué rutas tomar, dónde subir, dónde bajar y cuánto caminar.
 
+El buscador acepta solo puntos exactos: direcciones ("Cra 43 # 70-15"),
+estaciones y paraderos con nombre. No incluye barrios (un barrio no es un punto
+y daba rutas equivocadas) ni busca nombres de lugares en internet.
+
 - **Funciona offline.** La primera vez que abres la app se guardan la app y la base de rutas en el teléfono (service worker + IndexedDB). Después ya no necesita internet.
 - **El cálculo se hace en el dispositivo.** No hay servidor ni modelo de lenguaje: es un buscador de caminos (Dijkstra) sobre la red de estaciones y paraderos.
 - **Dos perfiles:** *Caminar menos* (por defecto) y *Menos transbordos*. Si el otro perfil da una ruta distinta, se muestra como alternativa.
 - **Caminatas en Google Maps.** Cada tramo a pie trae un enlace para verlo en Google Maps.
 - **Origen por ubicación.** El botón "Usar mi ubicación" toma el GPS del celular (funciona sin internet) y lo convierte en la esquina más cercana usando 1.111 esquinas de calles y carreras de OpenStreetMap (`data/raw/anclas.txt`), con un error típico de media cuadra. La ubicación no sale del celular. Fuera de las calles numeradas de Barranquilla, Soledad y Malambo no se puede usar.
-- **Recientes.** Los últimos 4 viajes buscados (origen y destino); un toque repite la búsqueda con la hora actual. Se guardan solo en tu navegador (localStorage) y se pueden borrar. Un viaje que sale de la ubicación del GPS no se guarda.
+- **Recientes.** Los últimos 4 viajes completos buscados (origen y destino juntos, no lugares sueltos); un toque repite la búsqueda con la hora actual. Se guardan solo en tu navegador (localStorage) y se pueden borrar. Un viaje que sale de la ubicación del GPS no se guarda.
 
 ## Datos
 
@@ -43,11 +47,11 @@ Pages) y elegir "Agregar a la pantalla de inicio".
 - No incluye rutas complementarias (el sitio oficial no publica ninguna).
 - Los transbordos son gratis dentro de 105 minutos; entre troncales solo dentro del sistema.
 
-No hace falta cambiar nada para actualizar: en cada publicación el workflow pone el commit como versión de `sw.js`. Con internet la app siempre pide primero la versión más reciente de cada archivo y, sin conexión, usa la copia guardada. Al publicarse una versión nueva, la app se recarga sola una vez.
-
 ## Publicación
 
 Cada cambio en `main` se publica en GitHub Pages con `.github/workflows/pages.yml`
 (corre las pruebas, genera los datos y sube la app). La dirección queda en
 https://ycantill.github.io/moviliz/. En el repositorio, *Settings → Pages →
 Source* debe estar en **GitHub Actions**.
+
+No hace falta cambiar nada para actualizar: en cada publicación el workflow pone el commit como versión de `sw.js`. Con internet la app siempre pide primero la versión más reciente de cada archivo y, sin conexión, usa la copia guardada. Al publicarse una versión nueva, la app se recarga sola una vez.
