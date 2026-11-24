@@ -8,6 +8,7 @@ te dice qué rutas tomar, dónde subir, dónde bajar y cuánto caminar.
 - **El cálculo se hace en el dispositivo.** No hay servidor ni modelo de lenguaje: es un buscador de caminos (Dijkstra) sobre la red de estaciones y paraderos.
 - **Dos perfiles:** *Caminar menos* (por defecto) y *Menos transbordos*. Si el otro perfil da una ruta distinta, se muestra como alternativa.
 - **Caminatas en Google Maps.** Cada tramo a pie trae un enlace para verlo en Google Maps.
+- **Lugares por nombre (con internet).** Si hay conexión, al escribir un nombre ("Clínica General del Norte", "Buenavista") la app sugiere lugares de [Photon](https://photon.komoot.io) y, al oprimir *Buscar*, usa [Nominatim](https://nominatim.openstreetmap.org) de respaldo. Las coordenadas se convierten a calle y carrera con 1.111 esquinas de OpenStreetMap (`data/raw/anclas.txt`), con un error típico de media cuadra. Solo se envía el texto de la búsqueda. Sin conexión, la app sigue funcionando con direcciones, barrios, estaciones y paraderos.
 - **Mis lugares.** Puedes guardar direcciones (Casa, Trabajo…). Se guardan solo en tu navegador (localStorage), nunca en el repositorio.
 
 ## Datos
