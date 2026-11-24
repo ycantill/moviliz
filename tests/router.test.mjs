@@ -56,3 +56,22 @@ test('fuera del horario no usa rutas cerradas', () => {
   const tarde = new Date(2026, 10, 24, 3, 0);
   for (const r of data.routes) if (operaEn(r, tarde) === true) assert.fail(`${r.code} figura abierta a las 3 a. m.`);
 });
+
+test('convierte coordenadas de OpenStreetMap a calle y carrera', async () => {
+  const { latLonToGrid } = await import('../src/geo.js');
+  // Esquina de la calle 48 con carrera 45 (Barranquilla) según OpenStreetMap.
+  const p = latLonToGrid(data.anclas, 10.987, -74.78712);
+  assert.equal(p.muni, 'barranquilla');
+  assert.ok(Math.abs(p.calle - 48) + Math.abs(p.carrera - 45) <= 1, JSON.stringify(p));
+  // Soledad: calle 49 con carrera 10.
+  const s = latLonToGrid(data.anclas, 10.90442, -74.78597);
+  assert.equal(s.muni, 'soledad');
+  // En el mar no hay calles.
+  assert.equal(latLonToGrid(data.anclas, 11.1, -74.85), null);
+});
+
+test('un lugar encontrado en el mapa sirve como origen', () => {
+  const from = resolvePlace(index, { kind: 'mapa', name: 'Prueba', lat: 10.987, lon: -74.78712 });
+  const r = planTrip(index, from, resolvePlace(index, est('Joe Arroyo')), { date });
+  assert.ok(!r.error, r.error);
+});

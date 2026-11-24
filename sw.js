@@ -1,5 +1,5 @@
 // Service worker: guarda la app para que abra sin conexión.
-const VERSION = 'moviliz-v1';
+const VERSION = 'moviliz-v2';
 const SHELL = [
   './',
   'index.html',
@@ -9,6 +9,7 @@ const SHELL = [
   'src/router.js',
   'src/geo.js',
   'src/store.js',
+  'src/online.js',
   'data/transmetro.json',
   'icons/icon.svg',
   'icons/icon-192.png',

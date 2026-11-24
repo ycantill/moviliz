@@ -1,6 +1,9 @@
 import { buildIndex, planTrip, resolvePlace, search, PERFILES, operaEn } from './router.js';
 import { parseAddress } from './geo.js';
 import { loadData } from './store.js';
+import { buscarPhoton, buscarNominatim, enLinea } from './online.js';
+
+const TIPOS = { direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Paradero', mapa: 'Lugar' };
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -66,33 +69,54 @@ function setChosen(role, place) {
   if (place?.muni) $('select.muni', field).value = place.muni;
   const info = $('.elegido', field);
   if (place) {
-    const tipo = { direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar' }[place.kind];
-    info.textContent = `${tipo}: ${place.kind === 'direccion' ? place.text + ', ' + MUNI[place.muni] : place.name}`;
+    const tipo = TIPOS[place.kind];
+    const detalle = place.kind === 'direccion' ? place.text + ', ' + MUNI[place.muni]
+      : place.kind === 'mapa' ? place.name + (place.label ? ' (' + place.label + ')' : '') : place.name;
+    info.textContent = `${tipo}: ${detalle}`;
     info.hidden = false;
   } else info.hidden = true;
   $('.sugerencias', field).hidden = true;
 }
 
+function renderSugerencias(list, items, buscando) {
+  let html = items.map((p, i) => `<li role="option" data-i="${i}"><span class="tag">${TIPOS[p.kind]}</span><span>${esc(p.name)}${(p.kind === 'lugar' || p.kind === 'mapa') && p.label ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
+  if (buscando) html += '<li class="muted">Buscando en el mapa…</li>';
+  if (!html) html = `<li class="muted">Sin resultados. Prueba con una dirección como "Calle 72 # 46-20"${enLinea() ? '' : ' (sin conexión solo se buscan barrios, estaciones y paraderos)'}.</li>`;
+  list.innerHTML = html;
+  list._items = items;
+  list.hidden = false;
+}
+
+const online = { timer: {}, ctrl: {} };
 function suggestionsFor(role) {
   const field = $(`.field[data-role="${role}"]`);
   const q = $('input', field).value;
   const list = $('.sugerencias', field);
   chosen[role] = null;
   $('.elegido', field).hidden = true;
+  clearTimeout(online.timer[role]);
+  online.ctrl[role]?.abort();
   if (!index || q.trim().length < 2) { list.hidden = true; return; }
   const items = [];
   const muni = $('select.muni', field).value;
   if (parseAddress(q)) items.push({ kind: 'direccion', text: q.trim(), muni, name: q.trim() });
   for (const p of getLugares()) if (p.nombre.toLowerCase().includes(q.toLowerCase())) items.push({ kind: 'direccion', text: p.dir, muni: p.muni, name: p.nombre });
-  items.push(...search(index, q, 8));
-  if (!items.length) {
-    list.innerHTML = '<li class="muted">Sin resultados. Prueba con una dirección como "Calle 72 # 46-20".</li>';
-    list.hidden = false;
-    return;
-  }
-  list.innerHTML = items.map((p, i) => `<li role="option" data-i="${i}"><span class="tag">${{ direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar' }[p.kind]}</span><span>${esc(p.name)}${p.kind === 'lugar' ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
-  list._items = items;
-  list.hidden = false;
+  items.push(...search(index, q, 6));
+  const pedirMapa = enLinea() && q.trim().length >= 3 && !parseAddress(q);
+  renderSugerencias(list, items, pedirMapa);
+  if (!pedirMapa) return;
+  // Espera a que la persona deje de escribir antes de consultar en línea.
+  online.timer[role] = setTimeout(async () => {
+    const ctrl = new AbortController();
+    online.ctrl[role] = ctrl;
+    try {
+      const mapa = await buscarPhoton(q.trim(), { signal: ctrl.signal });
+      if ($('input', field).value !== q) return;
+      renderSugerencias(list, [...items, ...mapa], false);
+    } catch (err) {
+      if (err.name !== 'AbortError' && $('input', field).value === q) renderSugerencias(list, items, false);
+    }
+  }, 350);
 }
 
 for (const role of ['origen', 'destino']) {
@@ -137,6 +161,19 @@ $('#ahora').addEventListener('click', () => { $('#hora').value = toLocalInput(ne
 $('#hora').value = toLocalInput(new Date());
 
 // ---------- Buscar ----------
+// Al oprimir "Buscar" sin haber elegido una sugerencia: primero Nominatim y,
+// si no encuentra nada, Photon.
+async function buscarEnMapa(q) {
+  try {
+    const r = await buscarNominatim(q, { limit: 1 });
+    if (r[0]) return r[0];
+  } catch { /* se intenta con Photon */ }
+  try {
+    const r = await buscarPhoton(q, { limit: 1 });
+    return r[0] || null;
+  } catch { return null; }
+}
+
 function placeFromField(role) {
   if (chosen[role]) return chosen[role];
   const field = $(`.field[data-role="${role}"]`);
@@ -146,17 +183,33 @@ function placeFromField(role) {
   if (parseAddress(q)) return { kind: 'direccion', text: q, muni, name: q };
   const saved = getLugares().find((p) => p.nombre.toLowerCase() === q.toLowerCase());
   if (saved) return { kind: 'direccion', text: saved.dir, muni: saved.muni, name: saved.nombre };
-  return search(index, q, 1)[0] || null;
+  const local = search(index, q, 1)[0];
+  if (local) return local;
+  return enLinea() ? buscarEnMapa(q) : null;
 }
 
-$('#plan').addEventListener('submit', (e) => {
+$('#plan').addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!index) return;
-  const o = placeFromField('origen');
-  const d = placeFromField('destino');
-  if (!o || !d) { alertInline(!o ? 'No encontré el origen. Escribe una dirección, un barrio o una estación.' : 'No encontré el destino. Escribe una dirección, un barrio o una estación.'); return; }
-  const from = resolvePlace(index, o);
-  const to = resolvePlace(index, d);
+  const boton = $('#plan button.primary');
+  const necesitaMapa = ['origen', 'destino'].some((r) => !chosen[r] && $('#' + r).value.trim());
+  if (necesitaMapa && enLinea()) { boton.disabled = true; boton.textContent = 'Buscando…'; }
+  let o, d;
+  try {
+    o = await placeFromField('origen');
+    if (o?.kind === 'mapa' && !chosen.origen) setChosen('origen', o);
+    d = await placeFromField('destino');
+    if (d?.kind === 'mapa' && !chosen.destino) setChosen('destino', d);
+  } finally {
+    boton.disabled = false; boton.textContent = 'Buscar ruta';
+  }
+  const ayuda = enLinea() ? 'Escribe una dirección, un barrio, una estación o el nombre de un lugar.' : 'Sin conexión solo puedo buscar direcciones, barrios, estaciones y paraderos.';
+  if (!o || !d) { alertInline(`No encontré el ${!o ? 'origen' : 'destino'}. ${ayuda}`); return; }
+  // Si un lugar del mapa queda fuera de la cuadrícula, se intenta con un paradero del mismo nombre.
+  const ubicar = (p) => resolvePlace(index, p) || (p.kind === 'mapa' ? search(index, p.name, 1)[0] || null : null);
+  const from = ubicar(o);
+  const to = ubicar(d);
+  if (!from || !to) { alertInline(`${!from ? 'El origen' : 'El destino'} queda fuera de las calles y carreras de Barranquilla, Soledad o Malambo, lejos de las rutas de Transmetro. Prueba con una dirección.`); return; }
   const date = $('#hora').value ? new Date($('#hora').value) : new Date();
   const perfil = new FormData($('#plan')).get('perfil');
   const res = planTrip(index, from, to, { perfil, date });
@@ -184,6 +237,7 @@ function nodeText(n) {
 }
 function placeText(p) {
   if (p.kind === 'direccion') return `${p.text}, ${MUNI[p.point?.muni || p.muni]}`;
+  if (p.kind === 'mapa') return `${p.lat},${p.lon}`;
   return null;
 }
 
