@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Moviliz</title>
+  <meta name="description" content="Planea tu viaje en Transmetro Barranquilla, incluso sin conexión.">
+  <meta name="theme-color" content="#0b6e4f">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Moviliz</h1>
+    <span id="estado-red" class="pill" aria-live="polite"></span>
+  </header>
+
+  <main>
+    <form id="plan" class="card" autocomplete="off">
+      <div class="field" data-role="origen">
+        <label for="origen">Desde</label>
+        <div class="row">
+          <input id="origen" type="text" placeholder="Dirección, barrio, estación o lugar" enterkeyhint="next">
+          <select class="muni" aria-label="Municipio del origen">
+            <option value="barranquilla">Barranquilla</option>
+            <option value="soledad">Soledad</option>
+          </select>
+        </div>
+        <ul class="sugerencias" role="listbox" hidden></ul>
+        <p class="elegido" hidden></p>
+      </div>
+
+      <button type="button" id="invertir" class="icon" aria-label="Invertir origen y destino">⇅</button>
+
+      <div class="field" data-role="destino">
+        <label for="destino">Hasta</label>
+        <div class="row">
+          <input id="destino" type="text" placeholder="Dirección, barrio, estación o lugar" enterkeyhint="search">
+          <select class="muni" aria-label="Municipio del destino">
+            <option value="barranquilla">Barranquilla</option>
+            <option value="soledad">Soledad</option>
+          </select>
+        </div>
+        <ul class="sugerencias" role="listbox" hidden></ul>
+        <p class="elegido" hidden></p>
+      </div>
+
+      <div id="mis-lugares" class="chips" aria-label="Mis lugares"></div>
+
+      <fieldset class="seg">
+        <legend>Prefiero</legend>
+        <label><input type="radio" name="perfil" value="caminar" checked> Caminar menos</label>
+        <label><input type="radio" name="perfil" value="transbordos"> Menos transbordos</label>
+      </fieldset>
+
+      <div class="cuando">
+        <label for="hora">Salida</label>
+        <input id="hora" type="datetime-local">
+        <button type="button" id="ahora" class="link">Ahora</button>
+      </div>
+
+      <button type="submit" class="primary">Buscar ruta</button>
+    </form>
+
+    <section id="resultado" aria-live="polite"></section>
+
+    <details class="card">
+      <summary>Mis lugares guardados</summary>
+      <p class="muted">Se guardan solo en este dispositivo.</p>
+      <div class="guardar">
+        <input id="lugar-nombre" type="text" placeholder="Nombre (p. ej. Casa)">
+        <input id="lugar-dir" type="text" placeholder="Dirección (p. ej. Cra 43 # 70-15)">
+        <select id="lugar-muni" aria-label="Municipio">
+          <option value="barranquilla">Barranquilla</option>
+          <option value="soledad">Soledad</option>
+        </select>
+        <button type="button" id="lugar-guardar">Guardar</button>
+      </div>
+      <ul id="lugares-lista" class="lista"></ul>
+    </details>
+
+    <details class="card">
+      <summary>Acerca de los datos</summary>
+      <p id="info-datos" class="muted"></p>
+      <p class="muted">Rutas, paradas y horarios tomados de <a href="https://transmetro.gov.co" target="_blank" rel="noopener">transmetro.gov.co</a>. Las distancias a pie son aproximadas: se calculan con la numeración de calles y carreras, no con GPS.</p>
+    </details>
+  </main>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
