@@ -331,5 +331,17 @@ loadData().then(({ data, origen }) => {
 });
 
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  navigator.serviceWorker.register('sw.js').catch((e) => console.warn('SW', e));
+  // updateViaCache: 'none' hace que el navegador siempre revise si hay un sw.js nuevo.
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then((reg) => {
+    // Al volver a la app (por ejemplo, desde otra app del celular) se busca actualización.
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); });
+  }).catch((e) => console.warn('SW', e));
+  // Cuando se instala una versión nueva, se recarga una sola vez para usarla.
+  const habiaControlador = !!navigator.serviceWorker.controller;
+  let recargando = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!habiaControlador || recargando) return;
+    recargando = true;
+    location.reload();
+  });
 }
