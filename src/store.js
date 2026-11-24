@@ -34,19 +34,21 @@ async function idbPut(value) {
   } catch { /* sin IndexedDB: la app sigue funcionando con la red o la caché */ }
 }
 
-// Usa la copia local al instante y, si hay internet, la actualiza en segundo plano.
+// Con internet usa la base más reciente (si llega en pocos segundos) y la guarda.
+// Sin internet, o si la red tarda, usa la copia guardada en el dispositivo.
+const ESPERA_RED_MS = 3000;
 export async function loadData() {
   const local = await idbGet();
   const fetchFresh = async () => {
     const res = await fetch(URL_DATOS, { cache: 'no-cache' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    if (!local || local.generado !== data.generado || local.version !== data.version) await idbPut(data);
+    if (!local || JSON.stringify(local) !== JSON.stringify(data)) await idbPut(data);
     return data;
   };
-  if (local) {
-    if (navigator.onLine) fetchFresh().catch(() => {});
-    return { data: local, origen: 'local' };
-  }
-  return { data: await fetchFresh(), origen: 'red' };
+  if (!local) return { data: await fetchFresh(), origen: 'red' };
+  if (!navigator.onLine) return { data: local, origen: 'local' };
+  const fresh = fetchFresh().catch(() => null);
+  const data = await Promise.race([fresh, new Promise((r) => setTimeout(() => r(null), ESPERA_RED_MS))]);
+  return data ? { data, origen: 'red' } : { data: local, origen: 'local' };
 }
