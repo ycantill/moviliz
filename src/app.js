@@ -17,40 +17,78 @@ addEventListener('online', updateNet);
 addEventListener('offline', updateNet);
 updateNet();
 
-// ---------- Lugares guardados (solo en este dispositivo) ----------
-const LS_KEY = 'moviliz.lugares';
-function getLugares() {
-  try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
+// ---------- Recientes (solo en este dispositivo) ----------
+// Cada búsqueda guarda el viaje y sus dos lugares. La ubicación del GPS no
+// se guarda, porque cambia cada vez.
+const LS_RECIENTES = 'moviliz.recientes';
+const MAX_VIAJES = 4;
+const MAX_LUGARES = 8;
+try { localStorage.removeItem('moviliz.lugares'); } catch { /* sin almacenamiento */ }
+
+function leerRecientes() {
+  try {
+    const r = JSON.parse(localStorage.getItem(LS_RECIENTES) || '{}');
+    return { viajes: Array.isArray(r.viajes) ? r.viajes : [], lugares: Array.isArray(r.lugares) ? r.lugares : [] };
+  } catch { return { viajes: [], lugares: [] }; }
 }
-function setLugares(l) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(l)); } catch { /* almacenamiento no disponible */ }
-  renderLugares();
+function escribirRecientes(r) {
+  try { localStorage.setItem(LS_RECIENTES, JSON.stringify(r)); } catch { /* sin almacenamiento */ }
+  renderRecientes();
 }
-function renderLugares() {
-  const l = getLugares();
-  $('#mis-lugares').innerHTML = l.map((p, i) => `<button type="button" class="chip" data-i="${i}">★ ${esc(p.nombre)}</button>`).join('');
-  $('#lugares-lista').innerHTML = l.map((p, i) => `<li><span><b>${esc(p.nombre)}</b> · ${esc(p.dir)} (${MUNI[p.muni]})</span><button type="button" data-del="${i}" aria-label="Borrar ${esc(p.nombre)}">Borrar</button></li>`).join('') || '<li class="muted">Aún no tienes lugares guardados.</li>';
+// Solo lo necesario para volver a usar el lugar.
+function compacto(p) {
+  if (!p || p.kind === 'gps') return null;
+  const c = { kind: p.kind, name: p.name || p.text };
+  if (p.kind === 'direccion') { c.text = p.text; c.muni = p.point?.muni || p.muni; }
+  if (p.node) c.node = p.node;
+  if (p.label) c.label = p.label;
+  if (p.routes) c.routes = p.routes;
+  return c;
 }
-$('#lugar-guardar').addEventListener('click', () => {
-  const nombre = $('#lugar-nombre').value.trim();
-  const dir = $('#lugar-dir').value.trim();
-  if (!nombre || !dir) return;
-  if (!parseAddress(dir)) { alertInline('No entendí esa dirección. Escríbela como "Cra 43 # 70-15" o "Calle 45 con Carrera 8".'); return; }
-  setLugares([...getLugares(), { nombre, dir, muni: $('#lugar-muni').value }]);
-  $('#lugar-nombre').value = ''; $('#lugar-dir').value = '';
-});
-$('#lugares-lista').addEventListener('click', (e) => {
-  const i = e.target.dataset.del;
-  if (i == null) return;
-  const l = getLugares(); l.splice(+i, 1); setLugares(l);
-});
+const claveLugar = (p) => p.kind + '|' + (p.node || p.text || p.name).toLowerCase() + '|' + (p.muni || '');
+function recordar(o, d, perfil) {
+  const r = leerRecientes();
+  const co = compacto(o), cd = compacto(d);
+  for (const p of [cd, co]) {
+    if (!p) continue;
+    r.lugares = [p, ...r.lugares.filter((x) => claveLugar(x) !== claveLugar(p))].slice(0, MAX_LUGARES);
+  }
+  if (co && cd) {
+    const k = claveLugar(co) + '>' + claveLugar(cd);
+    r.viajes = [{ o: co, d: cd, perfil }, ...r.viajes.filter((v) => claveLugar(v.o) + '>' + claveLugar(v.d) !== k)].slice(0, MAX_VIAJES);
+  }
+  escribirRecientes(r);
+}
+function renderRecientes() {
+  const r = leerRecientes();
+  const box = $('#recientes');
+  if (!r.viajes.length && !r.lugares.length) { box.hidden = true; return; }
+  box.hidden = false;
+  $('#viajes-recientes').innerHTML = r.viajes.map((v, i) => `<li><button type="button" class="viaje" data-v="${i}"><span aria-hidden="true">↻</span> ${esc(v.o.name)} <span class="muted">→</span> ${esc(v.d.name)}</button></li>`).join('');
+  $('#lugares-recientes').innerHTML = r.lugares.map((p, i) => `<button type="button" class="chip" data-i="${i}">🕘 ${esc(p.name)}</button>`).join('');
+}
 let lastFocused = 'origen';
-$('#mis-lugares').addEventListener('click', (e) => {
+$('#lugares-recientes').addEventListener('click', (e) => {
   const i = e.target.closest('.chip')?.dataset.i;
   if (i == null) return;
-  const p = getLugares()[+i];
+  const p = leerRecientes().lugares[+i];
   const role = !chosen.origen && !$('#origen').value ? 'origen' : (!chosen.destino && !$('#destino').value ? 'destino' : lastFocused);
-  setChosen(role, { kind: 'direccion', text: p.dir, muni: p.muni, name: p.nombre });
+  setChosen(role, p);
+});
+$('#viajes-recientes').addEventListener('click', (e) => {
+  const i = e.target.closest('.viaje')?.dataset.v;
+  if (i == null) return;
+  const v = leerRecientes().viajes[+i];
+  setChosen('origen', v.o);
+  setChosen('destino', v.d);
+  const radio = $(`input[name=perfil][value="${v.perfil}"]`);
+  if (radio) radio.checked = true;
+  $('#hora').value = toLocalInput(new Date());
+  $('#plan').requestSubmit();
+});
+$('#borrar-recientes').addEventListener('click', () => {
+  try { localStorage.removeItem(LS_RECIENTES); } catch { /* sin almacenamiento */ }
+  renderRecientes();
 });
 
 function alertInline(msg) {
@@ -83,14 +121,16 @@ function suggestionsFor(role) {
   const items = [];
   const muni = $('select.muni', field).value;
   if (parseAddress(q)) items.push({ kind: 'direccion', text: q.trim(), muni, name: q.trim() });
-  for (const p of getLugares()) if (p.nombre.toLowerCase().includes(q.toLowerCase())) items.push({ kind: 'direccion', text: p.dir, muni: p.muni, name: p.nombre });
-  items.push(...search(index, q, 8));
+  const nq = q.trim().toLowerCase();
+  for (const p of leerRecientes().lugares) if (p.name.toLowerCase().includes(nq)) items.push({ ...p, reciente: true });
+  const vistos = new Set(items.map((p) => p.kind + '|' + p.name.toLowerCase()));
+  items.push(...search(index, q, 8).filter((p) => !vistos.has(p.kind + '|' + p.name.toLowerCase())));
   if (!items.length) {
     list.innerHTML = '<li class="muted">Sin resultados. Prueba con una dirección como "Calle 72 # 46-20".</li>';
     list.hidden = false;
     return;
   }
-  list.innerHTML = items.map((p, i) => `<li role="option" data-i="${i}"><span class="tag">${{ direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar' }[p.kind]}</span><span>${esc(p.name)}${p.kind === 'lugar' ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
+  list.innerHTML = items.map((p, i) => `<li role="option" data-i="${i}"><span class="tag">${p.reciente ? '🕘 Reciente' : { direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar' }[p.kind]}</span><span>${esc(p.name)}${p.kind === 'lugar' ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
   list._items = items;
   list.hidden = false;
 }
@@ -180,8 +220,8 @@ function placeFromField(role) {
   if (!q) return null;
   const muni = $('select.muni', field).value;
   if (parseAddress(q)) return { kind: 'direccion', text: q, muni, name: q };
-  const saved = getLugares().find((p) => p.nombre.toLowerCase() === q.toLowerCase());
-  if (saved) return { kind: 'direccion', text: saved.dir, muni: saved.muni, name: saved.nombre };
+  const reciente = leerRecientes().lugares.find((p) => p.name.toLowerCase() === q.toLowerCase());
+  if (reciente) return reciente;
   return search(index, q, 1)[0] || null;
 }
 
@@ -198,6 +238,7 @@ $('#plan').addEventListener('submit', (e) => {
   const perfil = new FormData($('#plan')).get('perfil');
   const res = planTrip(index, from, to, { perfil, date });
   const otro = planTrip(index, from, to, { perfil: perfil === 'caminar' ? 'transbordos' : 'caminar', date });
+  if (!res.error) recordar(o, d, perfil);
   renderResult(res, otro, from, to, date, perfil);
 });
 
@@ -298,7 +339,7 @@ function renderResult(res, otro, from, to, date, perfil) {
 }
 
 // ---------- Inicio ----------
-renderLugares();
+renderRecientes();
 loadData().then(({ data, origen }) => {
   index = buildIndex(data);
   const n = data.routes.filter((r) => r.activa).length;
