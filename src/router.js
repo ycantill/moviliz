@@ -98,20 +98,12 @@ export function buildIndex(data) {
     }
   }
 
-  // Índice de búsqueda: estaciones, lugares (paraderos con nombre) y barrios.
+  // Índice de búsqueda: estaciones y lugares (paraderos con nombre). Los barrios
+// no se incluyen: la web oficial no dice dónde quedan, solo qué rutas pasan cerca.
   const places = [];
   for (const s of data.stations) {
     places.push({ kind: 'estacion', name: 'Estación ' + s.name, keys: [s.name, ...(s.alias || [])].map(norm), node: 'S:' + s.id });
   }
-  const barrios = new Map();
-  for (const r of routes) {
-    for (const b of r.barrios || []) {
-      const k = norm(b);
-      if (!barrios.has(k)) barrios.set(k, { name: b, routes: new Set() });
-      barrios.get(k).routes.add(r.code);
-    }
-  }
-  for (const [k, v] of barrios) places.push({ kind: 'barrio', name: v.name, keys: [k], routes: [...v.routes] });
   for (const n of nodes.values()) {
     if (n.station) continue;
     const extra = n.label.replace(/^(calle|carrera|cra|avenida|av\.|diagonal|transversal|v[ií]a)\s+[\w.#\s-]*?\d+\w*(\s*(con|no\.|#)\s*[\w\s-]*?\d+\w*(\s*-\s*\d+)?)?/i, '').replace(/\b(lado|frente a|esquina|esq)\b.*$/i, '').trim();
@@ -138,12 +130,12 @@ export function search(index, query, limit = 8) {
 }
 
 // Convierte lo que escribe la persona en un punto de partida o llegada.
-// place: {kind:'direccion', text, muni} | {kind:'gps', lat, lon} | {kind:'estacion'|'lugar', node} | {kind:'barrio', routes}
+// place: {kind:'direccion', text, muni} | {kind:'gps', lat, lon} | {kind:'estacion'|'lugar', node}
 export function resolvePlace(index, place) {
   if (place.kind === 'direccion') {
     const pos = parseAddress(place.text);
     if (!pos) return null;
-    return { kind: 'direccion', text: place.text, point: { ...pos, muni: place.muni || 'barranquilla' } };
+    return { kind: 'direccion', text: place.text, name: place.name || place.text, point: { ...pos, muni: place.muni || 'barranquilla' } };
   }
   if (place.kind === 'gps') {
     // Ubicación del celular: coordenadas que se pasan a calle y carrera.
@@ -157,18 +149,6 @@ export function resolvePlace(index, place) {
 // Enlaces del punto a nodos cercanos: [[nodeId, cuadras]]
 function attach(index, place, profile) {
   if (place.node) return [[place.node, 0]];
-  if (place.kind === 'barrio') {
-    // No sabemos en qué parte del barrio está: cualquier paradero de esas rutas
-    // dentro del barrio sirve, con una caminata estimada de 3 cuadras.
-    const out = [];
-    // Se omiten los paraderos de los extremos, que suelen estar junto a la estación y no dentro del barrio.
-    for (const r of index.routes) {
-      if (!place.routes.includes(r.code)) continue;
-      const k = Math.min(2, Math.floor(r.seq.length / 4));
-      r.seq.forEach((n, i) => { if (n.startsWith('P:') && i >= k && i < r.seq.length - k) out.push([n, 3]); });
-    }
-    return out;
-  }
   const out = [];
   for (const n of index.nodes.values()) {
     const d = blocks(place.point, n);
