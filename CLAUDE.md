@@ -60,8 +60,11 @@ npm run lint         # ESLint
 npm run type-check   # tsc sobre el JavaScript, con tipos en JSDoc
 npm test             # pruebas (node --test)
 npm run check        # lint + tipos + pruebas: debe pasar antes de cada PR
-npm start            # sirve la app en http://localhost:8080
+npm run test:e2e     # Playwright: flujo completo, sin conexión, 390 px, axe y CSP
+npm start            # sirve la app en http://localhost:8080 (scripts/serve.mjs)
 ```
+
+La primera vez, `npx playwright install chromium` para las pruebas E2E.
 
 ## Tipos
 
@@ -77,7 +80,7 @@ Si cambias `data/raw/` o `scripts/build-data.mjs`, regenera y sube `data/transme
 
 ## Despliegue y caché
 
-- Cada PR corre `.github/workflows/ci.yml` (lint, tipos, datos al día y pruebas).
+- Cada PR corre `.github/workflows/ci.yml` (lint, tipos, datos al día, pruebas y E2E).
 - Cada push a `main` publica en GitHub Pages con `.github/workflows/pages.yml`
   (datos, pruebas, `_site`, despliegue): https://ycantill.github.io/moviliz/
 - `sw.js` tiene `VERSION = 'moviliz-__VERSION__'`; el workflow lo reemplaza por el commit.
@@ -92,4 +95,5 @@ Si cambias `data/raw/` o `scripts/build-data.mjs`, regenera y sube `data/transme
 - **Actualiza el `README.md` en cada cambio** que afecte lo que hace la app o cómo se usa,
   y este archivo si cambia una regla o convención.
 - Textos de la interfaz en español de Colombia, sencillos.
-- Revisa que la app no tenga scroll horizontal en un celular de 390 px.
+- La app no debe tener scroll horizontal en un celular de 390 px; `tests/e2e` lo verifica.
+- Si cambias la interfaz, agrega o ajusta la prueba E2E correspondiente.
