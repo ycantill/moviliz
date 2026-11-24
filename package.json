@@ -9,11 +9,14 @@
     "lint": "eslint .",
     "type-check": "tsc -p tsconfig.json",
     "check": "npm run lint && npm run type-check && npm test",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "screenshot": "node scripts/screenshot.mjs",
+    "lighthouse": "lhci autorun"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.1",
     "@eslint/js": "^10.0.1",
+    "@lhci/cli": "^0.16.1",
     "@playwright/test": "^1.65.1",
     "@types/node": "^26.6.7",
     "eslint": "^10.15.0",

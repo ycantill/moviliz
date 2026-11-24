@@ -61,6 +61,8 @@ npm run type-check   # tsc sobre el JavaScript, con tipos en JSDoc
 npm test             # pruebas (node --test)
 npm run check        # lint + tipos + pruebas: debe pasar antes de cada PR
 npm run test:e2e     # Playwright: flujo completo, sin conexión, 390 px, axe y CSP
+npm run lighthouse   # Lighthouse CI (umbrales en lighthouserc.cjs)
+npm run screenshot   # regenera docs/screenshot.png si cambia la interfaz
 npm start            # sirve la app en http://localhost:8080 (scripts/serve.mjs)
 ```
 
@@ -80,7 +82,7 @@ Si cambias `data/raw/` o `scripts/build-data.mjs`, regenera y sube `data/transme
 
 ## Despliegue y caché
 
-- Cada PR corre `.github/workflows/ci.yml` (lint, tipos, datos al día, pruebas y E2E).
+- Cada PR corre `.github/workflows/ci.yml` (lint, tipos, datos al día, pruebas, E2E y Lighthouse).
 - Cada push a `main` publica en GitHub Pages con `.github/workflows/pages.yml`
   (datos, pruebas, `_site`, despliegue): https://ycantill.github.io/moviliz/
 - `sw.js` tiene `VERSION = 'moviliz-__VERSION__'`; el workflow lo reemplaza por el commit.
@@ -99,3 +101,4 @@ Si cambias `data/raw/` o `scripts/build-data.mjs`, regenera y sube `data/transme
 - Textos de la interfaz en español de Colombia, sencillos.
 - La app no debe tener scroll horizontal en un celular de 390 px; `tests/e2e` lo verifica.
 - Si cambias la interfaz, agrega o ajusta la prueba E2E correspondiente.
+- Si el cambio se ve en pantalla, regenera la captura del README con `npm run screenshot`.
