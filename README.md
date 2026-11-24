@@ -43,7 +43,7 @@ Pages) y elegir "Agregar a la pantalla de inicio".
 - No incluye rutas complementarias (el sitio oficial no publica ninguna).
 - Los transbordos son gratis dentro de 105 minutos; entre troncales solo dentro del sistema.
 
-Al cambiar la base, sube `VERSION` en `sw.js` para que los teléfonos descarguen la nueva app.
+No hace falta cambiar nada para actualizar: en cada publicación el workflow pone el commit como versión de `sw.js`. Con internet la app siempre pide primero la versión más reciente de cada archivo y, sin conexión, usa la copia guardada. Al publicarse una versión nueva, la app se recarga sola una vez.
 
 ## Publicación
 
