@@ -1,5 +1,5 @@
 // Service worker: guarda la app para que abra sin conexión.
-const VERSION = 'moviliz-v5';
+const VERSION = 'moviliz-v6';
 const SHELL = [
   './',
   'index.html',

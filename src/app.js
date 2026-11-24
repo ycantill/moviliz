@@ -18,18 +18,17 @@ addEventListener('offline', updateNet);
 updateNet();
 
 // ---------- Recientes (solo en este dispositivo) ----------
-// Cada búsqueda guarda el viaje y sus dos lugares. La ubicación del GPS no
-// se guarda, porque cambia cada vez.
+// Cada búsqueda guarda el viaje completo (origen y destino). Si el origen
+// es la ubicación del GPS, no se guarda, porque cambia cada vez.
 const LS_RECIENTES = 'moviliz.recientes';
 const MAX_VIAJES = 4;
-const MAX_LUGARES = 8;
 try { localStorage.removeItem('moviliz.lugares'); } catch { /* sin almacenamiento */ }
 
 function leerRecientes() {
   try {
     const r = JSON.parse(localStorage.getItem(LS_RECIENTES) || '{}');
-    return { viajes: Array.isArray(r.viajes) ? r.viajes : [], lugares: Array.isArray(r.lugares) ? r.lugares : [] };
-  } catch { return { viajes: [], lugares: [] }; }
+    return { viajes: Array.isArray(r.viajes) ? r.viajes : [] };
+  } catch { return { viajes: [] }; }
 }
 function escribirRecientes(r) {
   try { localStorage.setItem(LS_RECIENTES, JSON.stringify(r)); } catch { /* sin almacenamiento */ }
@@ -49,10 +48,6 @@ const claveLugar = (p) => p.kind + '|' + (p.node || p.text || p.name).toLowerCas
 function recordar(o, d, perfil) {
   const r = leerRecientes();
   const co = compacto(o), cd = compacto(d);
-  for (const p of [cd, co]) {
-    if (!p) continue;
-    r.lugares = [p, ...r.lugares.filter((x) => claveLugar(x) !== claveLugar(p))].slice(0, MAX_LUGARES);
-  }
   if (co && cd) {
     const k = claveLugar(co) + '>' + claveLugar(cd);
     r.viajes = [{ o: co, d: cd, perfil }, ...r.viajes.filter((v) => claveLugar(v.o) + '>' + claveLugar(v.d) !== k)].slice(0, MAX_VIAJES);
@@ -62,19 +57,10 @@ function recordar(o, d, perfil) {
 function renderRecientes() {
   const r = leerRecientes();
   const box = $('#recientes');
-  if (!r.viajes.length && !r.lugares.length) { box.hidden = true; return; }
+  if (!r.viajes.length) { box.hidden = true; return; }
   box.hidden = false;
   $('#viajes-recientes').innerHTML = r.viajes.map((v, i) => `<li><button type="button" class="viaje" data-v="${i}"><span aria-hidden="true">↻</span> ${esc(v.o.name)} <span class="muted">→</span> ${esc(v.d.name)}</button></li>`).join('');
-  $('#lugares-recientes').innerHTML = r.lugares.map((p, i) => `<button type="button" class="chip" data-i="${i}">🕘 ${esc(p.name)}</button>`).join('');
 }
-let lastFocused = 'origen';
-$('#lugares-recientes').addEventListener('click', (e) => {
-  const i = e.target.closest('.chip')?.dataset.i;
-  if (i == null) return;
-  const p = leerRecientes().lugares[+i];
-  const role = !chosen.origen && !$('#origen').value ? 'origen' : (!chosen.destino && !$('#destino').value ? 'destino' : lastFocused);
-  setChosen(role, p);
-});
 $('#viajes-recientes').addEventListener('click', (e) => {
   const i = e.target.closest('.viaje')?.dataset.v;
   if (i == null) return;
@@ -121,8 +107,6 @@ function suggestionsFor(role) {
   const items = [];
   const muni = $('select.muni', field).value;
   if (parseAddress(q)) items.push({ kind: 'direccion', text: q.trim(), muni, name: q.trim() });
-  const nq = q.trim().toLowerCase();
-  for (const p of leerRecientes().lugares) if (p.name.toLowerCase().includes(nq)) items.push({ ...p, reciente: true });
   const vistos = new Set(items.map((p) => p.kind + '|' + p.name.toLowerCase()));
   items.push(...search(index, q, 8).filter((p) => !vistos.has(p.kind + '|' + p.name.toLowerCase())));
   if (!items.length) {
@@ -130,7 +114,7 @@ function suggestionsFor(role) {
     list.hidden = false;
     return;
   }
-  list.innerHTML = items.map((p, i) => `<li role="option" data-i="${i}"><span class="tag">${p.reciente ? '🕘 Reciente' : { direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar' }[p.kind]}</span><span>${esc(p.name)}${p.kind === 'lugar' ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
+  list.innerHTML = items.map((p, i) => `<li role="option" data-i="${i}"><span class="tag">${{ direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar' }[p.kind]}</span><span>${esc(p.name)}${p.kind === 'lugar' ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
   list._items = items;
   list.hidden = false;
 }
@@ -139,7 +123,6 @@ for (const role of ['origen', 'destino']) {
   const field = $(`.field[data-role="${role}"]`);
   const input = $('input', field);
   input.addEventListener('input', () => suggestionsFor(role));
-  input.addEventListener('focus', () => { lastFocused = role; });
   $('select.muni', field).addEventListener('change', () => {
     if (chosen[role]?.kind === 'direccion') chosen[role].muni = $('select.muni', field).value;
   });
@@ -220,8 +203,6 @@ function placeFromField(role) {
   if (!q) return null;
   const muni = $('select.muni', field).value;
   if (parseAddress(q)) return { kind: 'direccion', text: q, muni, name: q };
-  const reciente = leerRecientes().lugares.find((p) => p.name.toLowerCase() === q.toLowerCase());
-  if (reciente) return reciente;
   return search(index, q, 1)[0] || null;
 }
 

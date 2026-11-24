@@ -9,7 +9,7 @@ te dice qué rutas tomar, dónde subir, dónde bajar y cuánto caminar.
 - **Dos perfiles:** *Caminar menos* (por defecto) y *Menos transbordos*. Si el otro perfil da una ruta distinta, se muestra como alternativa.
 - **Caminatas en Google Maps.** Cada tramo a pie trae un enlace para verlo en Google Maps.
 - **Origen por ubicación.** El botón "Usar mi ubicación" toma el GPS del celular (funciona sin internet) y lo convierte en la esquina más cercana usando 1.111 esquinas de calles y carreras de OpenStreetMap (`data/raw/anclas.txt`), con un error típico de media cuadra. La ubicación no sale del celular. Fuera de las calles numeradas de Barranquilla, Soledad y Malambo no se puede usar.
-- **Recientes.** Cada búsqueda queda en el historial: los últimos 4 viajes (un toque los repite) y los últimos 8 lugares (un toque los pone en el campo vacío). También aparecen al escribir. Se guardan solo en tu navegador (localStorage) y se pueden borrar. La ubicación del GPS no se guarda.
+- **Recientes.** Los últimos 4 viajes buscados (origen y destino); un toque repite la búsqueda con la hora actual. Se guardan solo en tu navegador (localStorage) y se pueden borrar. Un viaje que sale de la ubicación del GPS no se guarda.
 
 ## Datos
 
