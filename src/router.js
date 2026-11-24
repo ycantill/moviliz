@@ -4,7 +4,7 @@
 // cada ruta une sus paradas en orden, y caminar une puntos cercanos.
 // Dijkstra busca el viaje de menor "costo", donde el costo pondera
 // caminar, subirse a un bus (cada transbordo) y las paradas recorridas.
-import { blocks, norm, parseAddress, walkMinutes } from './geo.js';
+import { blocks, latLonToGrid, norm, parseAddress, walkMinutes } from './geo.js';
 
 export const PERFILES = {
   caminar: { walk: 10, board: 25, ride: 1.5, label: 'Caminar menos' },
@@ -138,12 +138,18 @@ export function search(index, query, limit = 8) {
 }
 
 // Convierte lo que escribe la persona en un punto de partida o llegada.
-// place: {kind:'direccion', text, muni} | {kind:'estacion'|'lugar', node} | {kind:'barrio', routes}
+// place: {kind:'direccion', text, muni} | {kind:'gps', lat, lon} | {kind:'estacion'|'lugar', node} | {kind:'barrio', routes}
 export function resolvePlace(index, place) {
   if (place.kind === 'direccion') {
     const pos = parseAddress(place.text);
     if (!pos) return null;
     return { kind: 'direccion', text: place.text, point: { ...pos, muni: place.muni || 'barranquilla' } };
+  }
+  if (place.kind === 'gps') {
+    // Ubicación del celular: coordenadas que se pasan a calle y carrera.
+    const pos = latLonToGrid(index.data.anclas, place.lat, place.lon);
+    if (!pos) return null;
+    return { ...place, point: pos };
   }
   return place;
 }
