@@ -94,3 +94,5 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 main > *, form#plan > * { min-width: 0; }
 .row input, .cuando input { width: 0; }
 input[type=datetime-local] { width: 100%; }
+.ubicacion { padding: 6px 2px 0; font-size: .9rem; }
+.ubicacion[disabled] { color: var(--muted); cursor: default; }

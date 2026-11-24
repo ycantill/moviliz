@@ -66,8 +66,8 @@ function setChosen(role, place) {
   if (place?.muni) $('select.muni', field).value = place.muni;
   const info = $('.elegido', field);
   if (place) {
-    const tipo = { direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar' }[place.kind];
-    info.textContent = `${tipo}: ${place.kind === 'direccion' ? place.text + ', ' + MUNI[place.muni] : place.name}`;
+    const tipo = { direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar', gps: 'Tu ubicación' }[place.kind];
+    info.textContent = `${tipo}: ${place.kind === 'direccion' ? place.text + ', ' + MUNI[place.muni] : place.kind === 'gps' ? place.detalle : place.name}`;
     info.hidden = false;
   } else info.hidden = true;
   $('.sugerencias', field).hidden = true;
@@ -128,6 +128,42 @@ $('#invertir').addEventListener('click', () => {
   if (o) setChosen('destino', o); else $('.field[data-role="destino"] .elegido').hidden = true;
 });
 
+// ---------- Mi ubicación ----------
+// El GPS funciona sin internet. La posición se convierte en la esquina más
+// cercana y no se envía a ningún servicio.
+// La posición es aproximada, así que se muestra la calle o carrera entera más cercana.
+function nombreVia(v) {
+  return `${Math.max(1, Math.round(Math.abs(v)))}${v < 0 ? ' Sur' : ''}`;
+}
+const btnUbicacion = $('#mi-ubicacion');
+if ('geolocation' in navigator) btnUbicacion.hidden = false;
+btnUbicacion.addEventListener('click', () => {
+  if (!index) return;
+  btnUbicacion.disabled = true;
+  btnUbicacion.textContent = '📍 Buscando tu ubicación…';
+  const listo = () => { btnUbicacion.disabled = false; btnUbicacion.textContent = '📍 Usar mi ubicación'; };
+  navigator.geolocation.getCurrentPosition((pos) => {
+    listo();
+    const { latitude: lat, longitude: lon, accuracy } = pos.coords;
+    const p = resolvePlace(index, { kind: 'gps', lat, lon });
+    if (!p) {
+      alertInline('Tu ubicación queda fuera de las calles y carreras de Barranquilla, Soledad o Malambo. Escribe la dirección de origen.');
+      return;
+    }
+    const esquina = `Calle ${nombreVia(p.point.calle)} con Carrera ${nombreVia(p.point.carrera)}`;
+    const name = 'Mi ubicación';
+    const detalle = `cerca de ${esquina}, ${MUNI[p.point.muni]}${accuracy > 150 ? ` (precisión de unos ${Math.round(accuracy / 10) * 10} m)` : ''}`;
+    setChosen('origen', { kind: 'gps', lat, lon, name, detalle, muni: p.point.muni });
+    if (accuracy > 400) alertInline('El GPS da una ubicación poco precisa. Revisa que la esquina sea correcta o escribe la dirección.');
+    else if ($('#resultado .aviso') && !$('#resultado .card:not(.aviso)')) $('#resultado').innerHTML = '';
+  }, (err) => {
+    listo();
+    alertInline(err.code === 1
+      ? 'No diste permiso para usar tu ubicación. Puedes activarlo en los ajustes del navegador o escribir la dirección.'
+      : 'No pude obtener tu ubicación. Revisa que el GPS esté activo o escribe la dirección.');
+  }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+});
+
 // ---------- Hora ----------
 function toLocalInput(d) {
   const p = (n) => String(n).padStart(2, '0');
@@ -157,6 +193,7 @@ $('#plan').addEventListener('submit', (e) => {
   if (!o || !d) { alertInline(!o ? 'No encontré el origen. Escribe una dirección, un barrio o una estación.' : 'No encontré el destino. Escribe una dirección, un barrio o una estación.'); return; }
   const from = resolvePlace(index, o);
   const to = resolvePlace(index, d);
+  if (!from || !to) { alertInline(`No pude ubicar ${!from ? 'el origen' : 'el destino'}. Escribe la dirección.`); return; }
   const date = $('#hora').value ? new Date($('#hora').value) : new Date();
   const perfil = new FormData($('#plan')).get('perfil');
   const res = planTrip(index, from, to, { perfil, date });
@@ -184,6 +221,7 @@ function nodeText(n) {
 }
 function placeText(p) {
   if (p.kind === 'direccion') return `${p.text}, ${MUNI[p.point?.muni || p.muni]}`;
+  if (p.kind === 'gps') return `${p.lat},${p.lon}`;
   return null;
 }
 
