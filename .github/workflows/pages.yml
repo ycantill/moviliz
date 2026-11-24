@@ -31,6 +31,9 @@ jobs:
           mkdir _site
           cp -r index.html styles.css sw.js manifest.webmanifest src icons _site/
           mkdir _site/data && cp data/transmetro.json _site/data/
+          # Versión única por publicación: obliga a los celulares a instalar el service worker nuevo.
+          sed -i "s/__VERSION__/${GITHUB_SHA::12}/" _site/sw.js
+          grep -q "moviliz-${GITHUB_SHA::12}" _site/sw.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
