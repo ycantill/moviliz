@@ -27,7 +27,9 @@ try { localStorage.removeItem('moviliz.lugares'); } catch { /* sin almacenamient
 function leerRecientes() {
   try {
     const r = JSON.parse(localStorage.getItem(LS_RECIENTES) || '{}');
-    return { viajes: Array.isArray(r.viajes) ? r.viajes : [] };
+    // Los barrios ya no se usan como origen o destino.
+    const viajes = Array.isArray(r.viajes) ? r.viajes.filter((v) => v.o?.kind !== 'barrio' && v.d?.kind !== 'barrio') : [];
+    return { viajes };
   } catch { return { viajes: [] }; }
 }
 function escribirRecientes(r) {
@@ -90,7 +92,7 @@ function setChosen(role, place) {
   if (place?.muni) $('select.muni', field).value = place.muni;
   const info = $('.elegido', field);
   if (place) {
-    const tipo = { direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar', gps: 'Tu ubicación' }[place.kind];
+    const tipo = { direccion: 'Dirección', estacion: 'Estación', lugar: 'Lugar', gps: 'Tu ubicación' }[place.kind];
     info.textContent = `${tipo}: ${place.kind === 'direccion' ? place.text + ', ' + MUNI[place.muni] : place.kind === 'gps' ? place.detalle : place.name}`;
     info.hidden = false;
   } else info.hidden = true;
@@ -114,7 +116,7 @@ function suggestionsFor(role) {
     list.hidden = false;
     return;
   }
-  list.innerHTML = items.map((p, i) => `<li role="option" data-i="${i}"><span class="tag">${{ direccion: 'Dirección', estacion: 'Estación', barrio: 'Barrio', lugar: 'Lugar' }[p.kind]}</span><span>${esc(p.name)}${p.kind === 'lugar' ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
+  list.innerHTML = items.map((p, i) => `<li role="option" data-i="${i}"><span class="tag">${{ direccion: 'Dirección', estacion: 'Estación', lugar: 'Lugar' }[p.kind]}</span><span>${esc(p.name)}${p.kind === 'lugar' ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
   list._items = items;
   list.hidden = false;
 }
@@ -211,7 +213,7 @@ $('#plan').addEventListener('submit', (e) => {
   if (!index) return;
   const o = placeFromField('origen');
   const d = placeFromField('destino');
-  if (!o || !d) { alertInline(!o ? 'No encontré el origen. Escribe una dirección, un barrio o una estación.' : 'No encontré el destino. Escribe una dirección, un barrio o una estación.'); return; }
+  if (!o || !d) { alertInline(!o ? 'No encontré el origen. Escribe una dirección, una estación o un paradero.' : 'No encontré el destino. Escribe una dirección, una estación o un paradero.'); return; }
   const from = resolvePlace(index, o);
   const to = resolvePlace(index, d);
   if (!from || !to) { alertInline(`No pude ubicar ${!from ? 'el origen' : 'el destino'}. Escribe la dirección.`); return; }
@@ -253,9 +255,7 @@ function legsHtml(legs, from, to) {
       const isFirst = i === 0;
       const isLast = i === legs.length - 1;
       let title, detail = '';
-      if (isFirst && from.kind === 'barrio') {
-        title = `En ${esc(from.name)}, ve al paradero más cercano de la ruta ${esc(legs[i + 1]?.routeCode || '')}`;
-      } else {
+      {
         const a = isFirst ? (from.name || 'tu origen') : l.from?.label;
         const b = isLast ? (to.name || 'tu destino') : l.to?.label;
         title = `Camina ${cuadras(l.blocks)} hasta ${esc(b)}`;
@@ -268,7 +268,7 @@ function legsHtml(legs, from, to) {
     }
     const r = l.route;
     const tipo = r.type === 'troncal' ? (/expres/i.test(r.tipo) ? 'Expreso' : 'Troncal') : 'Alimentadora';
-    const fromLabel = i === 0 && from.kind === 'barrio' ? `un paradero en ${from.name}` : l.from.label;
+    const fromLabel = l.from.label;
     const hacia = r.type === 'troncal' ? ` hacia ${esc(r.name.split('→')[1]?.trim())}` : '';
     const notas = [];
     if (r.nota) notas.push(esc(r.nota));

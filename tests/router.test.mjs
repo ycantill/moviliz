@@ -35,8 +35,13 @@ test('entre dos estaciones de la troncal sale una ruta directa', () => {
   assert.equal(codes(r).length, 1);
 });
 
-test('desde un barrio de Soledad llega a Parque Cultural', () => {
-  const from = resolvePlace(index, search(index, 'Villa Katanga', 3)[0]);
+test('los barrios no aparecen en la búsqueda', () => {
+  assert.equal(search(index, 'Buenavista', 20).filter((p) => p.kind === 'barrio').length, 0);
+  assert.ok(search(index, 'Buenavista', 20).some((p) => p.kind === 'lugar'));
+});
+
+test('desde una dirección de Soledad llega a Parque Cultural', () => {
+  const from = resolvePlace(index, { kind: 'direccion', text: 'Carrera 18 con calle 59', muni: 'soledad' });
   const r = planTrip(index, from, resolvePlace(index, est('Parque Cultural')), { date });
   assert.ok(!r.error, r.error);
   assert.ok(codes(r).length <= 3);
