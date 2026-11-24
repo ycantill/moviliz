@@ -1,7 +1,7 @@
 # Moviliz
 
 App web (PWA) para planear viajes en **Transmetro Barranquilla** sin conexión.
-Escribes un origen y un destino (dirección, barrio, estación o lugar) y la app
+Escribes un origen y un destino (dirección, estación o paradero) y la app
 te dice qué rutas tomar, dónde subir, dónde bajar y cuánto caminar.
 
 - **Funciona offline.** La primera vez que abres la app se guardan la app y la base de rutas en el teléfono (service worker + IndexedDB). Después ya no necesita internet.
