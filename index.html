@@ -48,7 +48,11 @@
         <p class="elegido" hidden></p>
       </div>
 
-      <div id="mis-lugares" class="chips" aria-label="Mis lugares"></div>
+      <section id="recientes" class="recientes" aria-label="Recientes" hidden>
+        <div class="recientes-tit"><span>Recientes</span><button type="button" id="borrar-recientes" class="link">Borrar</button></div>
+        <ul id="viajes-recientes" class="viajes"></ul>
+        <div id="lugares-recientes" class="chips"></div>
+      </section>
 
       <fieldset class="seg">
         <legend>Prefiero</legend>
@@ -66,21 +70,6 @@
     </form>
 
     <section id="resultado" aria-live="polite"></section>
-
-    <details class="card">
-      <summary>Mis lugares guardados</summary>
-      <p class="muted">Se guardan solo en este dispositivo.</p>
-      <div class="guardar">
-        <input id="lugar-nombre" type="text" placeholder="Nombre (p. ej. Casa)">
-        <input id="lugar-dir" type="text" placeholder="Dirección (p. ej. Cra 43 # 70-15)">
-        <select id="lugar-muni" aria-label="Municipio">
-          <option value="barranquilla">Barranquilla</option>
-          <option value="soledad">Soledad</option>
-        </select>
-        <button type="button" id="lugar-guardar">Guardar</button>
-      </div>
-      <ul id="lugares-lista" class="lista"></ul>
-    </details>
 
     <details class="card">
       <summary>Acerca de los datos</summary>
