@@ -22,14 +22,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - run: npm ci
       - name: Generar datos
         run: npm run build:data
-      - name: Pruebas
-        run: npm test
+      - name: Lint, tipos y pruebas
+        run: npm run check
       - name: Armar sitio
         run: |
           mkdir _site
           cp -r index.html styles.css sw.js manifest.webmanifest src icons _site/
+          rm -f _site/src/*.d.ts
           mkdir _site/data && cp data/transmetro.json _site/data/
           # Versión única por publicación: obliga a los celulares a instalar el service worker nuevo.
           sed -i "s/__VERSION__/${GITHUB_SHA::12}/" _site/sw.js

@@ -32,8 +32,9 @@ sus vecinos.
 ## Uso local
 
 ```bash
+npm ci               # herramientas de desarrollo (ESLint, TypeScript)
 npm run build:data   # regenera data/transmetro.json
-npm test             # pruebas del buscador de rutas
+npm run check        # lint, tipos (JSDoc + tsc) y pruebas del buscador de rutas
 npm start            # sirve la app en http://localhost:8080
 ```
 
@@ -50,7 +51,7 @@ Pages) y elegir "Agregar a la pantalla de inicio".
 ## Publicación
 
 Cada cambio en `main` se publica en GitHub Pages con `.github/workflows/pages.yml`
-(corre las pruebas, genera los datos y sube la app). La dirección queda en
+(genera los datos, corre lint, tipos y pruebas, y sube la app). Cada PR pasa antes por `.github/workflows/ci.yml`. La dirección queda en
 https://ycantill.github.io/moviliz/. En el repositorio, *Settings → Pages →
 Source* debe estar en **GitHub Actions**.
 

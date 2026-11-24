@@ -1,0 +1,36 @@
+name: CI
+
+# Revisa cada PR antes de fusionarlo. El despliegue (pages.yml) repite
+# las mismas revisiones antes de publicar.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Tipos (JSDoc + tsc)
+        run: npm run type-check
+      - name: Datos al día
+        # data/transmetro.json se versiona: si alguien cambia data/raw/ sin regenerarlo, falla.
+        run: |
+          npm run build:data
+          git diff --exit-code -- data/transmetro.json
+      - name: Pruebas
+        run: npm test

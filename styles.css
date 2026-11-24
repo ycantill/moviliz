@@ -73,6 +73,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 #resultado:empty { display: none; }
 .resumen { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 10px; font-size: .9rem; color: var(--muted); }
 .resumen b { color: var(--text); }
+.titulo-ruta { margin: 0 0 4px; font-size: 1.1rem; }
+.nota-transbordo { margin: 10px 0 0; }
 .pasos { list-style: none; margin: 0; padding: 0; }
 .paso { display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
 .paso:first-child { border-top: 0; }
