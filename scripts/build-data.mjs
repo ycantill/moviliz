@@ -147,6 +147,15 @@ for (const a of kb.rutas_alimentadoras) {
   });
 }
 
+// Esquinas de OpenStreetMap para pasar coordenadas a calle y carrera.
+const MUNI_CODE = { b: 'barranquilla', s: 'soledad', m: 'malambo' };
+const anclas = {};
+for (const line of readFileSync(join(root, 'data/raw/anclas.txt'), 'utf8').split('\n')) {
+  const m = /^([bsm])=(.*)$/.exec(line.trim());
+  if (!m) continue;
+  anclas[MUNI_CODE[m[1]]] = m[2].trim().split(/\s+/).map((p) => p.split(',').map(Number));
+}
+
 const out = {
   version: kb.fecha,
   fuente: 'https://transmetro.gov.co',
@@ -154,8 +163,9 @@ const out = {
   reglas: kb.reglas_transbordo,
   stations: STATIONS.map(({ alias, ...s }) => ({ ...s, alias: alias || [] })),
   routes,
+  anclas: { lat0: 10.85, lon0: -74.92, escala: 10000, fuente: 'OpenStreetMap (ODbL)', puntos: anclas },
 };
 writeFileSync(join(root, 'data/transmetro.json'), JSON.stringify(out));
 const approx = routes.flatMap((r) => r.stops.filter((s) => s.approx).map((s) => `${r.code}: ${s.label}`));
-console.log(`OK: ${STATIONS.length} estaciones, ${routes.length} rutas, ${routes.reduce((n, r) => n + r.stops.length, 0)} paradas. Sin dirección exacta: ${approx.length}`);
+console.log(`OK: ${STATIONS.length} estaciones, ${routes.length} rutas, ${routes.reduce((n, r) => n + r.stops.length, 0)} paradas. Sin dirección exacta: ${approx.length}. Esquinas: ${Object.values(anclas).reduce((n, a) => n + a.length, 0)}`);
 if (process.argv.includes('-v')) console.log(approx.join('\n'));
