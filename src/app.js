@@ -86,7 +86,7 @@ function renderRecientes() {
   const box = $('#recientes');
   if (!r.viajes.length) { box.hidden = true; return; }
   box.hidden = false;
-  $('#viajes-recientes').innerHTML = r.viajes.map((v, i) => `<li><button type="button" class="viaje" data-v="${i}"><span aria-hidden="true">↻</span> ${esc(v.o.name)} <span class="muted">→</span> ${esc(v.d.name)}</button></li>`).join('');
+  $('#viajes-recientes').innerHTML = r.viajes.map((v, i) => `<li><button type="button" class="viaje" data-v="${i}"><span aria-hidden="true">↻</span> ${esc(v.o.name)} <span class="muted" aria-hidden="true">→</span><span class="sr-only"> a </span> ${esc(v.d.name)}</button></li>`).join('');
 }
 $('#viajes-recientes').addEventListener('click', (e) => {
   const boton = /** @type {HTMLElement | null} */ (/** @type {Element} */ (e.target).closest('.viaje'));
@@ -112,19 +112,52 @@ function alertInline(msg) {
 }
 
 // ---------- Campos de origen y destino ----------
+// Cada campo es un combobox con lista de sugerencias (patrón de WAI-ARIA 1.2):
+// el foco se queda en el input y aria-activedescendant marca la opción activa.
+// Flechas: moverse; Enter: elegir; Escape: cerrar la lista.
 /** @type {Record<Lugar['kind'], string>} */
 const TIPO_LUGAR = { direccion: 'Dirección', estacion: 'Estación', lugar: 'Lugar', gps: 'Tu ubicación' };
-/** Sugerencias que se muestran en cada campo. @type {Record<Rol, Lugar[]>} */
-const sugerencias = { origen: [], destino: [] };
+/** Sugerencias que se muestran en cada campo y la opción activa (-1 = ninguna). */
+/** @type {Record<Rol, { items: Lugar[], activa: number }>} */
+const sugerencias = { origen: { items: [], activa: -1 }, destino: { items: [], activa: -1 } };
 
 /** @param {Rol} role */
 const campo = (role) => $(`.field[data-role="${role}"]`);
+
+/** Texto para lectores de pantalla (región role="status"). @param {string} msg */
+function anunciar(msg) {
+  $('#anuncio').textContent = msg;
+}
 
 /** @param {Lugar} p */
 function textoElegido(p) {
   if (p.kind === 'direccion') return `${p.text}, ${MUNI[p.muni || 'barranquilla']}`;
   if (p.kind === 'gps') return p.detalle || '';
   return p.name;
+}
+
+/** Abre o cierra la lista y mantiene aria-expanded al día. @param {Rol} role @param {boolean} abierta */
+function mostrarLista(role, abierta) {
+  const field = campo(role);
+  $('.sugerencias', field).hidden = !abierta;
+  const input = $input('input', field);
+  input.setAttribute('aria-expanded', String(abierta));
+  if (!abierta) {
+    input.removeAttribute('aria-activedescendant');
+    sugerencias[role].activa = -1;
+  }
+}
+
+/** @param {Rol} role @param {number} i */
+function activar(role, i) {
+  const s = sugerencias[role];
+  if (!s.items.length) return;
+  s.activa = (i + s.items.length) % s.items.length;
+  const field = campo(role);
+  const id = `sug-${role}-${s.activa}`;
+  field.querySelectorAll('.sugerencias [role=option]').forEach((li) => li.setAttribute('aria-selected', String(li.id === id)));
+  $input('input', field).setAttribute('aria-activedescendant', id);
+  document.getElementById(id)?.scrollIntoView({ block: 'nearest' });
 }
 
 /** @param {Rol} role @param {Lugar | null} place */
@@ -139,7 +172,7 @@ function setChosen(role, place) {
     info.textContent = `${TIPO_LUGAR[place.kind]}: ${textoElegido(place)}`;
     info.hidden = false;
   } else info.hidden = true;
-  $('.sugerencias', field).hidden = true;
+  mostrarLista(role, false);
 }
 
 /** @param {Rol} role */
@@ -148,23 +181,26 @@ function suggestionsFor(role) {
   const q = $input('input', field).value;
   const list = $('.sugerencias', field);
   chosen[role] = null;
-  sugerencias[role] = [];
+  sugerencias[role].items = [];
   $('.elegido', field).hidden = true;
-  if (!index || q.trim().length < 2) { list.hidden = true; return; }
+  if (!index || q.trim().length < 2) { mostrarLista(role, false); return; }
   /** @type {Lugar[]} */
   const items = [];
   const muni = /** @type {Muni} */ ($select('select.muni', field).value);
   if (parseAddress(q)) items.push({ kind: 'direccion', text: q.trim(), muni, name: q.trim() });
   const vistos = new Set(items.map((p) => p.kind + '|' + (p.name || '').toLowerCase()));
   items.push(...search(index, q, 8).filter((p) => !vistos.has(p.kind + '|' + p.name.toLowerCase())));
+  mostrarLista(role, false);
   if (!items.length) {
-    list.innerHTML = '<li class="muted">Sin resultados. Prueba con una dirección como "Calle 72 # 46-20".</li>';
+    list.innerHTML = '<li class="muted vacio" role="presentation">Sin resultados. Prueba con una dirección como "Calle 72 # 46-20".</li>';
     list.hidden = false;
+    anunciar('Sin resultados.');
     return;
   }
-  list.innerHTML = items.map((p, i) => `<li role="option" data-i="${i}"><span class="tag">${TIPO_LUGAR[p.kind]}</span><span>${esc(p.name)}${p.kind === 'lugar' ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
-  sugerencias[role] = items;
-  list.hidden = false;
+  list.innerHTML = items.map((p, i) => `<li role="option" id="sug-${role}-${i}" aria-selected="false" data-i="${i}"><span class="tag">${TIPO_LUGAR[p.kind]}</span><span>${esc(p.name)}${p.kind === 'lugar' ? `<br><small class="muted">${esc(p.label)}</small>` : ''}</span></li>`).join('');
+  sugerencias[role].items = items;
+  mostrarLista(role, true);
+  anunciar(`${items.length} ${items.length === 1 ? 'sugerencia' : 'sugerencias'}. Usa las flechas para elegir.`);
 }
 
 for (const role of /** @type {Rol[]} */ (['origen', 'destino'])) {
@@ -176,21 +212,31 @@ for (const role of /** @type {Rol[]} */ (['origen', 'destino'])) {
     const actual = chosen[role];
     if (actual?.kind === 'direccion') actual.muni = /** @type {Muni} */ (select.value);
   });
+  // mousedown evita que el input pierda el foco al tocar una opción.
+  $('.sugerencias', field).addEventListener('mousedown', (e) => e.preventDefault());
   $('.sugerencias', field).addEventListener('click', (e) => {
     const li = /** @type {HTMLElement | null} */ (/** @type {Element} */ (e.target).closest('li[data-i]'));
     if (!li) return;
-    setChosen(role, sugerencias[role][Number(li.dataset.i)]);
+    setChosen(role, sugerencias[role].items[Number(li.dataset.i)]);
   });
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const list = $('.sugerencias', field);
-      if (!list.hidden && sugerencias[role].length) { e.preventDefault(); setChosen(role, sugerencias[role][0]); }
+    const s = sugerencias[role];
+    const abierta = !$('.sugerencias', field).hidden && s.items.length > 0;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!abierta) { if (input.value.trim().length >= 2) suggestionsFor(role); return; }
+      e.preventDefault();
+      activar(role, s.activa + (e.key === 'ArrowDown' ? 1 : s.activa < 0 ? 0 : -1));
+    } else if (e.key === 'Enter' && abierta) {
+      // Sin opción activa se elige la primera, como antes.
+      e.preventDefault();
+      setChosen(role, s.items[Math.max(0, s.activa)]);
+    } else if (e.key === 'Escape' && !$('.sugerencias', field).hidden) {
+      e.preventDefault();
+      mostrarLista(role, false);
     }
   });
+  input.addEventListener('blur', () => mostrarLista(role, false));
 }
-document.addEventListener('click', (e) => {
-  if (!/** @type {Element} */ (e.target).closest('.field')) document.querySelectorAll('.sugerencias').forEach((l) => { /** @type {HTMLElement} */ (l).hidden = true; });
-});
 
 $('#invertir').addEventListener('click', () => {
   const [o, d] = [chosen.origen, chosen.destino];
@@ -215,8 +261,9 @@ btnUbicacion.addEventListener('click', () => {
   if (!index) return;
   const idx = index;
   btnUbicacion.disabled = true;
-  btnUbicacion.textContent = '📍 Buscando tu ubicación…';
-  const listo = () => { btnUbicacion.disabled = false; btnUbicacion.textContent = '📍 Usar mi ubicación'; };
+  const txt = $('.txt', btnUbicacion);
+  txt.textContent = 'Buscando tu ubicación…';
+  const listo = () => { btnUbicacion.disabled = false; txt.textContent = 'Usar mi ubicación'; };
   navigator.geolocation.getCurrentPosition((pos) => {
     listo();
     const { latitude: lat, longitude: lon, accuracy } = pos.coords;

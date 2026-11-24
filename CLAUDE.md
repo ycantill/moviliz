@@ -23,6 +23,17 @@ Transmetro Barranquilla. Lee también el `README.md`.
 - **No hay indicador "En línea / Sin conexión"** en pantalla; la lógica de conexión de
   `store.js` sí se mantiene.
 
+## Accesibilidad y seguridad
+
+- Los campos de origen y destino siguen el patrón *combobox* de WAI-ARIA 1.2
+  (`aria-expanded`, `aria-activedescendant`, flechas, Enter, Escape). Si cambias las
+  sugerencias, mantén ese contrato y prueba con teclado.
+- Los avisos para lectores de pantalla van a `#anuncio` (`role="status"`).
+- Los íconos decorativos (emoji, flechas) llevan `aria-hidden="true"`.
+- `index.html` tiene una Content Security Policy estricta (`default-src 'self'`):
+  nada de `<script>` o `style="..."` en línea ni recursos de terceros. Usa clases de
+  `styles.css` y escapa todo texto que entre a `innerHTML` con `esc()`.
+
 ## Privacidad
 
 - Ningún dato personal en el repositorio: ni direcciones reales, ni documentos, ni
