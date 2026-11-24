@@ -18,7 +18,7 @@ export default [
   },
   {
     // Lo que va dentro de page.evaluate() corre en el navegador.
-    files: ['tests/e2e/**/*.mjs'],
+    files: ['tests/e2e/**/*.mjs', 'scripts/screenshot.mjs'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
   {

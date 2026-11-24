@@ -1,5 +1,12 @@
 # Moviliz
 
+[![CI](https://github.com/ycantill/moviliz/actions/workflows/ci.yml/badge.svg)](https://github.com/ycantill/moviliz/actions/workflows/ci.yml)
+[![Deploy](https://github.com/ycantill/moviliz/actions/workflows/pages.yml/badge.svg)](https://github.com/ycantill/moviliz/actions/workflows/pages.yml)
+[![Live demo](https://img.shields.io/badge/demo-ycantill.github.io%2Fmoviliz-0b6e4f)](https://ycantill.github.io/moviliz/)
+![No dependencies at runtime](https://img.shields.io/badge/runtime_dependencies-0-0b6e4f)
+
+![Moviliz en el celular: sugerencias del buscador, un viaje paso a paso y el modo oscuro sin conexión](docs/screenshot.png)
+
 > **English:** an offline-first PWA that plans bus trips on Barranquilla's Transmetro BRT system, entirely on the device. See the [technical overview](#technical-overview) below.
 
 App web (PWA) para planear viajes en **Transmetro Barranquilla** sin conexión.
@@ -38,6 +45,8 @@ npm ci               # herramientas de desarrollo (ESLint, TypeScript)
 npm run build:data   # regenera data/transmetro.json
 npm run check        # lint, tipos (JSDoc + tsc) y pruebas del buscador de rutas
 npm run test:e2e     # pruebas E2E con Playwright (requiere npx playwright install chromium)
+npm run lighthouse   # Lighthouse CI con los umbrales del CI
+npm run screenshot   # regenera docs/screenshot.png
 npm start            # sirve la app en http://localhost:8080
 ```
 
@@ -107,8 +116,16 @@ Barranquilla's addresses follow a numbered grid of *calles* and *carreras*, so `
 
 ### Quality
 
+**Lighthouse** (mobile emulation, median of 3 runs, measured 2026-11-24):
+
+| Performance | Accessibility | Best practices | SEO |
+| :-: | :-: | :-: | :-: |
+| 100 | 100 | 100 | 100 |
+
+CI fails a pull request if accessibility drops below 100, best practices below 95, or performance or SEO below 90. The performance threshold has some margin because shared CI runners are slower than a laptop.
+
 - **Unit tests** (`node:test`): address parsing, timetable parsing, routing between stations and addresses, closed routes at night, GPS conversion.
 - **End-to-end tests** (Playwright, 390 px mobile viewport): the full keyboard flow, recent trips, **planning a trip with the browser offline** after the first visit, no horizontal scroll, **axe-core WCAG 2.1 AA** with no violations, and no Content Security Policy violations.
 - **Accessibility:** origin and destination fields follow the WAI-ARIA 1.2 combobox pattern (`aria-expanded`, `aria-activedescendant`, arrow keys, Enter and Escape), and a live region announces suggestion counts.
 - **Security:** strict CSP (`default-src 'self'`, no inline scripts or styles), all dynamic text is HTML-escaped before rendering, and the dev server refuses path traversal.
-- **CI** on every pull request: ESLint, strict type-check, a check that the generated data matches its sources, unit tests and E2E tests. The deploy workflow repeats the checks before publishing.
+- **CI** on every pull request: ESLint, strict type-check, a check that the generated data matches its sources, unit tests, E2E tests and Lighthouse. The deploy workflow repeats the checks before publishing.
