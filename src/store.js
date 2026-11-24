@@ -4,6 +4,7 @@ const STORE = 'datos';
 const KEY = 'transmetro';
 const URL_DATOS = 'data/transmetro.json';
 
+/** @returns {Promise<IDBDatabase>} */
 function openDb() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB, 1);
@@ -12,6 +13,7 @@ function openDb() {
     req.onerror = () => reject(req.error);
   });
 }
+/** @returns {Promise<import('./types').Datos | null>} */
 async function idbGet() {
   try {
     const db = await openDb();
@@ -22,6 +24,7 @@ async function idbGet() {
     });
   } catch { return null; }
 }
+/** @param {import('./types').Datos} value */
 async function idbPut(value) {
   try {
     const db = await openDb();
@@ -37,6 +40,7 @@ async function idbPut(value) {
 // Con internet usa la base más reciente (si llega en pocos segundos) y la guarda.
 // Sin internet, o si la red tarda, usa la copia guardada en el dispositivo.
 const ESPERA_RED_MS = 3000;
+/** @returns {Promise<{ data: import('./types').Datos, origen: 'red' | 'local' }>} */
 export async function loadData() {
   const local = await idbGet();
   const fetchFresh = async () => {

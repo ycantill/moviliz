@@ -43,15 +43,30 @@ Transmetro Barranquilla. Lee también el `README.md`.
 ## Comandos
 
 ```bash
+npm ci               # instala las herramientas de desarrollo (la app no tiene dependencias)
 npm run build:data   # regenera data/transmetro.json desde data/raw/
-npm test             # pruebas (node --test), deben pasar antes de cada PR
+npm run lint         # ESLint
+npm run type-check   # tsc sobre el JavaScript, con tipos en JSDoc
+npm test             # pruebas (node --test)
+npm run check        # lint + tipos + pruebas: debe pasar antes de cada PR
 npm start            # sirve la app en http://localhost:8080
 ```
+
+## Tipos
+
+- La app es JavaScript sin build. Los tipos del dominio están en `src/types.d.ts` y se
+  usan con JSDoc (`/** @typedef {import('./types').Ruta} Ruta */`). `tsc` corre en modo
+  `strict` solo para revisar, no genera archivos.
+- Las funciones nuevas llevan `@param` y `@returns`. No uses `any` salvo para datos
+  externos sin validar (por ejemplo, lo que se lee de `localStorage`).
+- En `app.js`, usa `$`, `$input` y `$select` para buscar elementos: fallan si el
+  elemento no existe en vez de devolver `null`.
 
 Si cambias `data/raw/` o `scripts/build-data.mjs`, regenera y sube `data/transmetro.json`.
 
 ## Despliegue y caché
 
+- Cada PR corre `.github/workflows/ci.yml` (lint, tipos, datos al día y pruebas).
 - Cada push a `main` publica en GitHub Pages con `.github/workflows/pages.yml`
   (datos, pruebas, `_site`, despliegue): https://ycantill.github.io/moviliz/
 - `sw.js` tiene `VERSION = 'moviliz-__VERSION__'`; el workflow lo reemplaza por el commit.

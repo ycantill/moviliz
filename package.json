@@ -5,6 +5,16 @@
   "scripts": {
     "build:data": "node scripts/build-data.mjs",
     "test": "node --test tests/router.test.mjs",
-    "start": "python3 -m http.server 8080"
+    "start": "python3 -m http.server 8080",
+    "lint": "eslint .",
+    "type-check": "tsc -p tsconfig.json",
+    "check": "npm run lint && npm run type-check && npm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.7",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "typescript": "^7.0.2"
   }
 }
