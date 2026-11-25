@@ -42,8 +42,8 @@ const plan = async (p) => {
 await shot('s2', 'light', plan);
 await shot('s3', 'dark', plan, true);
 const img = (n) => 'data:image/png;base64,' + readFileSync(D + n + '.png').toString('base64');
-const html = `<html><body style="margin:0;background:linear-gradient(135deg,#0b6e4f,#0a4d39);font-family:system-ui;display:flex;flex-direction:column;align-items:center;padding:36px 40px 40px;gap:26px">
-<div style="display:flex;gap:34px">${['s1','s2','s3'].map((n,i)=>`<figure style="margin:0;text-align:center;color:#e6f2ee;font-size:19px"><img src="${img(n)}" style="width:330px;border-radius:30px;box-shadow:0 18px 40px rgba(0,0,0,.35);border:7px solid #111"><figcaption style="margin-top:14px">${['Search with keyboard suggestions','Step-by-step trip','Dark mode, with the network off'][i]}</figcaption></figure>`).join('')}</div></body></html>`;
+const html = `<html><body style="margin:0;background:linear-gradient(135deg,#ffc53d,#f08a24);font-family:system-ui;display:flex;flex-direction:column;align-items:center;padding:36px 40px 40px;gap:26px">
+<div style="display:flex;gap:34px">${['s1','s2','s3'].map((n,i)=>`<figure style="margin:0;text-align:center;color:#2a1d10;font-weight:700;font-size:19px"><img src="${img(n)}" style="width:330px;border-radius:30px;box-shadow:0 18px 40px rgba(0,0,0,.35);border:7px solid #111"><figcaption style="margin-top:14px">${['Search with keyboard suggestions','Step-by-step trip','Dark mode, with the network off'][i]}</figcaption></figure>`).join('')}</div></body></html>`;
 const p = await b.newPage({ viewport: { width: 1200, height: 800 }, deviceScaleFactor: 1.5 });
 await p.setContent(html); const h = await p.evaluate(() => document.body.scrollHeight);
 await p.setViewportSize({ width: 1200, height: h });

@@ -159,7 +159,9 @@ for (const line of readFileSync(join(root, 'data/raw/anclas.txt'), 'utf8').split
 const out = {
   version: kb.fecha,
   fuente: 'https://transmetro.gov.co',
-  generado: new Date().toISOString().slice(0, 10),
+  // Fecha de la fuente, no la de hoy: así el archivo generado es reproducible y el CI
+  // puede comprobar que está al día sin fallar cada día nuevo.
+  generado: kb.fecha,
   reglas: kb.reglas_transbordo,
   stations: STATIONS.map(({ alias, ...s }) => ({ ...s, alias: alias || [] })),
   routes,

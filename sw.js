@@ -18,6 +18,7 @@ const SHELL = [
   'src/geo.js',
   'src/store.js',
   'data/transmetro.json',
+  'fonts/nunito.woff2',
   'icons/icon.svg',
   'icons/icon-192.png',
   'icons/icon-512.png',

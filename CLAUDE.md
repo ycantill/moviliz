@@ -49,6 +49,7 @@ Transmetro Barranquilla. Lee también el `README.md`.
 - `src/geo.js`: nomenclatura de direcciones, distancias en cuadras y GPS → calle/carrera.
 - `src/store.js`: carga de `data/transmetro.json` con copia en IndexedDB.
 - `sw.js`: service worker, primero la red y copia guardada sin conexión.
+- `fonts/`: letra Nunito (variable, OFL) de toda la interfaz.
 - `data/raw/`: fuentes (rutas, paraderos, anclas). `data/transmetro.json` se genera.
 
 ## Comandos
@@ -99,6 +100,12 @@ Si cambias `data/raw/` o `scripts/build-data.mjs`, regenera y sube `data/transme
 - El README tiene una sección técnica en inglés (*Technical overview*) para quien revisa el
   código. Si cambias la arquitectura, las pruebas o las cifras del grafo, actualízala también.
 - Textos de la interfaz en español de Colombia, sencillos.
+- **Estilo "Caribe"** (elegido por la dueña): franja amarilla (`--top-bg`) con saludo,
+  tarjetas blancas redondeadas, verde mar (`--sea`) para la acción principal y coral
+  (`--coral`) para el destino; placas de ruta en píldora (rojo troncal / azul
+  alimentadora). Todos los colores salen de las variables de `:root` en `styles.css`,
+  con su versión oscura. La letra Nunito va en `fonts/` (nada de Google Fonts: rompe la
+  CSP y el modo offline).
 - La app no debe tener scroll horizontal en un celular de 390 px; `tests/e2e` lo verifica.
 - Si cambias la interfaz, agrega o ajusta la prueba E2E correspondiente.
 - Si el cambio se ve en pantalla, regenera la captura del README con `npm run screenshot`.

@@ -2,8 +2,8 @@
 
 [![CI](https://github.com/ycantill/moviliz/actions/workflows/ci.yml/badge.svg)](https://github.com/ycantill/moviliz/actions/workflows/ci.yml)
 [![Deploy](https://github.com/ycantill/moviliz/actions/workflows/pages.yml/badge.svg)](https://github.com/ycantill/moviliz/actions/workflows/pages.yml)
-[![Live demo](https://img.shields.io/badge/demo-ycantill.github.io%2Fmoviliz-0b6e4f)](https://ycantill.github.io/moviliz/)
-![No dependencies at runtime](https://img.shields.io/badge/runtime_dependencies-0-0b6e4f)
+[![Live demo](https://img.shields.io/badge/demo-ycantill.github.io%2Fmoviliz-00707c)](https://ycantill.github.io/moviliz/)
+![No dependencies at runtime](https://img.shields.io/badge/runtime_dependencies-0-00707c)
 
 ![Moviliz en el celular: sugerencias del buscador, un viaje paso a paso y el modo oscuro sin conexión](docs/screenshot.png)
 
@@ -23,6 +23,15 @@ y daba rutas equivocadas) ni busca nombres de lugares en internet.
 - **Caminatas en Google Maps.** Cada tramo a pie trae un enlace para verlo en Google Maps.
 - **Origen por ubicación.** El botón "Usar mi ubicación" toma el GPS del celular (funciona sin internet) y lo convierte en la esquina más cercana usando 1.111 esquinas de calles y carreras de OpenStreetMap (`data/raw/anclas.txt`), con un error típico de media cuadra. La ubicación no sale del celular. Fuera de las calles numeradas de Barranquilla, Soledad y Malambo no se puede usar.
 - **Recientes.** Los últimos 4 viajes completos buscados (origen y destino juntos, no lugares sueltos); un toque repite la búsqueda con la hora actual. Se guardan solo en tu navegador (localStorage) y se pueden borrar. Un viaje que sale de la ubicación del GPS no se guarda.
+
+## Diseño
+
+Estilo **Caribe**: cálido y costeño. Una franja amarilla arriba con el saludo
+"¿Pa' dónde vas hoy?", tarjetas blancas redondeadas, verde mar para el botón de
+buscar y coral para el destino. Los códigos de ruta salen como píldoras de color
+(rojo para troncales, azul para alimentadoras). La letra es Nunito (licencia OFL,
+`fonts/OFL.txt`) y viene dentro de la app, así que también se ve sin conexión.
+Tiene modo oscuro automático, con tonos tierra en vez del amarillo.
 
 ## Datos
 
@@ -83,6 +92,7 @@ Moviliz is a small, dependency-free Progressive Web App that answers *"which bus
 | Types with JSDoc + `tsc --noEmit` (strict) | Static checking of the domain model (`src/types.d.ts`) while the shipped code stays plain JS. |
 | Service worker + IndexedDB | The app and the 128 KB route database must survive with no signal, which is common on a moving bus. |
 | Custom Dijkstra in the browser | The network is small (820 nodes), so the search runs on the device and nothing about the trip leaves it. |
+| One self-hosted variable font (Nunito, 39 KB) | Gives the app its warm, rounded "Caribe" look; served from the app's own origin so it is cached offline and respects the strict CSP. |
 | GitHub Actions + GitHub Pages | Static hosting over HTTPS, which installable PWAs require. |
 
 ### Architecture

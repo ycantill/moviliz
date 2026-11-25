@@ -116,3 +116,18 @@ test('respeta la Content Security Policy', async ({ page }) => {
   await expect(page.locator('#resultado .pasos')).toBeVisible();
   expect(violaciones).toEqual([]);
 });
+
+test('muestra el viaje con placas de ruta y la letra de la app', async ({ page }) => {
+  await abrir(page);
+  await elegir(page, 'Desde', 'la ocho', 'La Ocho');
+  await elegir(page, 'Hasta', 'joe', 'Joe Arroyo');
+  await page.getByRole('button', { name: 'Buscar ruta' }).click();
+  const titulo = page.locator('#resultado .titulo-ruta');
+  await expect(titulo.locator('.placa').first()).toBeVisible();
+  // Cada placa toma el color de su tipo de ruta.
+  const fondo = await titulo.locator('.placa').first().evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(fondo).not.toBe('rgba(0, 0, 0, 0)');
+  // La letra Nunito viene de la misma app (sirve sin conexión).
+  await page.evaluate(() => document.fonts.ready);
+  expect(await page.evaluate(() => document.fonts.check('800 16px Nunito'))).toBe(true);
+});
