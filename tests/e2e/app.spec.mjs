@@ -131,3 +131,24 @@ test('muestra el viaje con placas de ruta y la letra de la app', async ({ page }
   await page.evaluate(() => document.fonts.ready);
   expect(await page.evaluate(() => document.fonts.check('800 16px Nunito'))).toBe(true);
 });
+
+test('sale ahora por defecto y deja elegir otra hora', async ({ page }) => {
+  await abrir(page);
+  const hora = page.locator('#hora');
+  await expect(hora).toBeHidden();
+  await page.getByRole('button', { name: /Cambiar hora/ }).click();
+  await expect(hora).toBeVisible();
+  await expect(hora).toBeFocused();
+  await page.getByRole('button', { name: 'Salir ahora' }).click();
+  await expect(hora).toBeHidden();
+});
+
+test('pide el municipio solo para direcciones', async ({ page }) => {
+  await abrir(page);
+  const muni = page.getByRole('combobox', { name: 'Municipio del origen' });
+  await expect(muni).toBeHidden();
+  await page.getByRole('combobox', { name: 'Desde' }).fill('Calle 30 # 20-10');
+  await expect(muni).toBeVisible();
+  await page.getByRole('combobox', { name: 'Desde' }).fill('la ocho');
+  await expect(muni).toBeHidden();
+});
