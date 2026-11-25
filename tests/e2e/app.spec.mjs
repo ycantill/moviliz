@@ -124,11 +124,10 @@ test('muestra el viaje con placas de ruta y la letra de la app', async ({ page }
   await page.getByRole('button', { name: 'Buscar ruta' }).click();
   const titulo = page.locator('#resultado .titulo-ruta');
   await expect(titulo.locator('.placa').first()).toBeVisible();
-  // El riel de cada tramo toma el color de su ruta.
-  const paso = page.locator('#resultado .paso:has(.badge.troncal), #resultado .paso:has(.badge.alimentadora)').first();
-  const riel = await paso.evaluate((el) => getComputedStyle(el, '::before').backgroundColor);
-  expect(riel).not.toBe('rgba(0, 0, 0, 0)');
-  // La letra Archivo viene de la misma app (sirve sin conexión).
+  // Cada placa toma el color de su tipo de ruta.
+  const fondo = await titulo.locator('.placa').first().evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(fondo).not.toBe('rgba(0, 0, 0, 0)');
+  // La letra Nunito viene de la misma app (sirve sin conexión).
   await page.evaluate(() => document.fonts.ready);
-  expect(await page.evaluate(() => document.fonts.check('800 16px Archivo'))).toBe(true);
+  expect(await page.evaluate(() => document.fonts.check('800 16px Nunito'))).toBe(true);
 });
