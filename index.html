@@ -29,7 +29,7 @@
         <div class="row">
           <input id="origen" type="text" placeholder="Dirección, estación o paradero" enterkeyhint="next"
                  role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sug-origen" aria-describedby="elegido-origen">
-          <select class="muni" aria-label="Municipio del origen">
+          <select class="muni" aria-label="Municipio del origen" hidden>
             <option value="barranquilla">Barranquilla</option>
             <option value="soledad">Soledad</option>
           </select>
@@ -46,7 +46,7 @@
         <div class="row">
           <input id="destino" type="text" placeholder="Dirección, estación o paradero" enterkeyhint="search"
                  role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sug-destino" aria-describedby="elegido-destino">
-          <select class="muni" aria-label="Municipio del destino">
+          <select class="muni" aria-label="Municipio del destino" hidden>
             <option value="barranquilla">Barranquilla</option>
             <option value="soledad">Soledad</option>
           </select>
@@ -68,8 +68,9 @@
 
       <div class="cuando">
         <label for="hora">Salida</label>
-        <input id="hora" type="datetime-local">
-        <button type="button" id="ahora" class="link">Ahora</button>
+        <button type="button" id="cambiar-hora" class="hora-ahora" aria-controls="hora">Ahora <span class="cambiar">Cambiar hora</span></button>
+        <input id="hora" type="datetime-local" hidden>
+        <button type="button" id="ahora" class="link" hidden>Salir ahora</button>
       </div>
 
       <button type="submit" class="primary">Buscar ruta</button>

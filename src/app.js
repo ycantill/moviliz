@@ -98,7 +98,7 @@ $('#viajes-recientes').addEventListener('click', (e) => {
   setChosen('destino', v.d);
   const radio = /** @type {HTMLInputElement | null} */ (document.querySelector(`input[name=perfil][value="${v.perfil}"]`));
   if (radio) radio.checked = true;
-  $input('#hora').value = toLocalInput(new Date());
+  horaFija(false);
   /** @type {HTMLFormElement} */ ($('#plan')).requestSubmit();
 });
 $('#borrar-recientes').addEventListener('click', () => {
@@ -160,6 +160,18 @@ function activar(role, i) {
   document.getElementById(id)?.scrollIntoView({ block: 'nearest' });
 }
 
+/**
+ * El municipio solo importa en las direcciones (calle/carrera); para estaciones y
+ * paraderos se oculta y el campo de texto queda más ancho.
+ * @param {Rol} role @returns {void}
+ */
+function actualizarMuni(role) {
+  const field = campo(role);
+  const elegido = chosen[role];
+  const esDireccion = elegido ? elegido.kind === 'direccion' : !!parseAddress($input('input', field).value);
+  $select('select.muni', field).hidden = !esDireccion;
+}
+
 /** @param {Rol} role @param {Lugar | null} place */
 function setChosen(role, place) {
   const field = campo(role);
@@ -173,6 +185,7 @@ function setChosen(role, place) {
     info.hidden = false;
   } else info.hidden = true;
   mostrarLista(role, false);
+  actualizarMuni(role);
 }
 
 /** @param {Rol} role */
@@ -183,6 +196,7 @@ function suggestionsFor(role) {
   chosen[role] = null;
   sugerencias[role].items = [];
   $('.elegido', field).hidden = true;
+  actualizarMuni(role);
   if (!index || q.trim().length < 2) { mostrarLista(role, false); return; }
   /** @type {Lugar[]} */
   const items = [];
@@ -245,6 +259,7 @@ $('#invertir').addEventListener('click', () => {
   $input('#origen').value = dv; $input('#destino').value = ov;
   if (d) setChosen('origen', d); else $('.elegido', campo('origen')).hidden = true;
   if (o) setChosen('destino', o); else $('.elegido', campo('destino')).hidden = true;
+  actualizarMuni('origen'); actualizarMuni('destino');
 });
 
 // ---------- Mi ubicación ----------
@@ -293,8 +308,21 @@ function toLocalInput(d) {
   const p = (n) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
 }
-$('#ahora').addEventListener('click', () => { $input('#hora').value = toLocalInput(new Date()); });
-$input('#hora').value = toLocalInput(new Date());
+// Por defecto se sale "ahora" (la hora se toma al buscar, no al abrir la app).
+// "Cambiar hora" muestra el selector para planear otra salida.
+/** @param {boolean} fija @returns {void} */
+function horaFija(fija) {
+  const hora = $input('#hora');
+  hora.hidden = !fija;
+  $('#ahora').hidden = !fija;
+  $('#cambiar-hora').hidden = fija;
+  if (fija) {
+    if (!hora.value) hora.value = toLocalInput(new Date());
+    hora.focus();
+  } else hora.value = '';
+}
+$('#cambiar-hora').addEventListener('click', () => horaFija(true));
+$('#ahora').addEventListener('click', () => { horaFija(false); $('#cambiar-hora').focus(); });
 
 // ---------- Buscar ----------
 /** @param {Indice} idx @param {Rol} role @returns {Lugar | null} */
@@ -318,8 +346,8 @@ $('#plan').addEventListener('submit', (e) => {
   const from = resolvePlace(index, o);
   const to = resolvePlace(index, d);
   if (!from || !to) { alertInline(`No pude ubicar ${!from ? 'el origen' : 'el destino'}. Escribe la dirección.`); return; }
-  const hora = $input('#hora').value;
-  const date = hora ? new Date(hora) : new Date();
+  const hora = $input('#hora');
+  const date = !hora.hidden && hora.value ? new Date(hora.value) : new Date();
   const perfil = /** @type {PerfilId} */ (new FormData(/** @type {HTMLFormElement} */ ($('#plan'))).get('perfil') || 'caminar');
   const res = planTrip(index, from, to, { perfil, date });
   const otro = planTrip(index, from, to, { perfil: perfil === 'caminar' ? 'transbordos' : 'caminar', date });
@@ -378,7 +406,8 @@ function legsHtml(legs, from, to) {
     if (/desv/i.test(r.estado || '')) notas.push('Opera con desvío.');
     return `<li class="paso"><span class="badge ${r.type}">${esc(r.code)}</span><div>
       <h3>Toma la ${esc(r.code)}${r.type === 'alimentadora' ? ' ' + esc(r.name) : ''}${hacia}</h3>
-      <p>${tipo} · Sube en ${esc(l.from.label)} · Baja en <b>${esc(l.to.label)}</b> (${l.stops} ${l.stops === 1 ? 'parada' : 'paradas'})</p>
+      <p class="subebaja"><span>Sube en <b>${esc(l.from.label)}</b></span><span>Baja en <b>${esc(l.to.label)}</b></span></p>
+      <p>${tipo} · ${l.stops} ${l.stops === 1 ? 'parada' : 'paradas'}</p>
       ${notas.length ? `<p>${notas.join(' ')}</p>` : ''}
       <p><a href="${esc(r.fuente)}" target="_blank" rel="noopener">Horario y recorrido oficial</a></p>
     </div></li>`;
@@ -395,7 +424,12 @@ function stats(legs) {
 /** @param {ReturnType<typeof stats>} s */
 function resumenHtml(s) {
   const c = Math.max(0, Math.round(s.walk));
-  return `<p class="resumen"><span><b>${s.transbordos}</b> ${s.transbordos === 1 ? 'transbordo' : 'transbordos'}</span><span><b>${c}</b> ${c === 1 ? 'cuadra' : 'cuadras'} a pie</span><span><b>${s.paradas}</b> ${s.paradas === 1 ? 'parada' : 'paradas'}</span></p>`;
+  const chips = [
+    s.transbordos === 0 ? 'Directo' : `<b>${s.transbordos}</b> ${s.transbordos === 1 ? 'transbordo' : 'transbordos'}`,
+    c === 0 ? 'Casi sin caminar' : `<b>${c}</b> ${c === 1 ? 'cuadra' : 'cuadras'} a pie`,
+  ];
+  if (s.paradas > 0) chips.push(`<b>${s.paradas}</b> ${s.paradas === 1 ? 'parada' : 'paradas'}`);
+  return `<p class="resumen">${chips.map((t) => `<span>${t}</span>`).join('')}</p>`;
 }
 
 /**

@@ -22,6 +22,9 @@ y daba rutas equivocadas) ni busca nombres de lugares en internet.
 - **Dos perfiles:** *Caminar menos* (por defecto) y *Menos transbordos*. Si el otro perfil da una ruta distinta, se muestra como alternativa.
 - **Caminatas en Google Maps.** Cada tramo a pie trae un enlace para verlo en Google Maps.
 - **Origen por ubicación.** El botón "Usar mi ubicación" toma el GPS del celular (funciona sin internet) y lo convierte en la esquina más cercana usando 1.111 esquinas de calles y carreras de OpenStreetMap (`data/raw/anclas.txt`), con un error típico de media cuadra. La ubicación no sale del celular. Fuera de las calles numeradas de Barranquilla, Soledad y Malambo no se puede usar.
+- **Salida ahora por defecto.** La hora se toma en el momento de buscar, aunque la app lleve rato abierta. "Cambiar hora" deja planear otra salida; la hora solo filtra las rutas que operan en ese momento.
+- **Municipio solo cuando hace falta.** El selector de Barranquilla / Soledad aparece cuando escribes una dirección (calle o carrera); para estaciones y paraderos no se pide.
+- **Paso a paso claro.** Cada bus dice en renglones separados dónde subir y dónde bajar. El resumen dice "Directo" o "Casi sin caminar" en vez de mostrar ceros.
 - **Recientes.** Los últimos 4 viajes completos buscados (origen y destino juntos, no lugares sueltos); un toque repite la búsqueda con la hora actual. Se guardan solo en tu navegador (localStorage) y se pueden borrar. Un viaje que sale de la ubicación del GPS no se guarda.
 
 ## Diseño

@@ -98,17 +98,22 @@ select.muni { flex: 0 0 auto; max-width: 9.5rem; font-size: .9rem; }
 .sugerencias li.vacio { cursor: default; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .tag { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 800; flex: 0 0 auto; }
-.icon { justify-self: end; margin: -8px 0; width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--soft); color: var(--text); font-size: 1.1rem; font-weight: 900; cursor: pointer; }
+.icon { justify-self: end; margin: -8px 0; position: relative; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--soft); color: var(--text); font-size: 1.1rem; font-weight: 900; cursor: pointer; }
 .seg { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .seg legend { width: 100%; }
 .seg label { flex: 1; text-align: center; border-radius: 999px; padding: 9px 8px; cursor: pointer; font-size: .92rem; font-weight: 800; background: var(--soft); color: var(--muted); }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
 .seg label:has(input:checked) { background: var(--pill); color: var(--pill-ink); }
 .seg label:has(input:focus-visible) { outline: 3px solid var(--sea); outline-offset: 2px; }
-.cuando { display: flex; align-items: end; gap: 8px; flex-wrap: wrap; }
+.cuando { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .cuando label { width: 100%; margin: 0; }
 .cuando input { flex: 1; }
-button.link { background: none; border: 0; color: var(--sea); font: inherit; font-weight: 800; cursor: pointer; padding: 10px 4px; }
+.hora-ahora { font: inherit; font-weight: 800; color: var(--text); background: var(--soft); border: 0; border-radius: 14px; padding: 11px 12px; min-height: 44px; flex: 1; display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer; text-align: left; }
+.hora-ahora .cambiar { color: var(--sea); font-size: .9rem; }
+.cuando [hidden] { display: none; }
+button.link { background: none; border: 0; color: var(--sea); font: inherit; font-weight: 800; cursor: pointer; padding: 10px 4px; min-height: 44px; }
+/* El botón de invertir sube a la fila de "Usar mi ubicación" para no dejar un hueco. */
+form#plan:has(#mi-ubicacion:not([hidden])) #invertir { margin: -50px 0 -20px; }
 button.primary { font: 900 1.1rem/1.2 var(--font); border: 0; border-radius: 999px; padding: 14px; background: var(--sea); color: var(--sea-ink); cursor: pointer; }
 button.primary:hover { filter: brightness(1.06); }
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid color-mix(in srgb, var(--sea) 55%, transparent); outline-offset: 2px; }
@@ -135,17 +140,19 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .badge.alimentadora { background: var(--alim); }
 .paso h3 { margin: 2px 0; font-size: 1rem; font-weight: 800; }
 .paso p { margin: 2px 0; font-size: .9rem; color: var(--muted); }
+.subebaja { display: grid; gap: 1px; }
+.subebaja b { color: var(--text); }
 .aviso { background: var(--warn-bg); color: var(--warn); border-radius: 14px; padding: 9px 12px; font-size: .88rem; font-weight: 700; margin-top: 10px; }
 
 main > *, form#plan > * { min-width: 0; }
 .row input, .cuando input { width: 0; }
 input[type=datetime-local] { width: 100%; }
-.ubicacion { padding: 6px 2px 0; font-size: .92rem; }
+.ubicacion { padding: 6px 2px 0; font-size: .92rem; min-height: 40px; }
 .ubicacion[disabled] { color: var(--muted); cursor: default; }
 .recientes { display: grid; gap: 6px; }
 .recientes[hidden] { display: none; }
 .recientes-tit { display: flex; justify-content: space-between; align-items: center; font-size: .8rem; color: var(--muted); font-weight: 800; }
-.recientes-tit .link { padding: 0 4px; font-size: .82rem; }
+.recientes-tit .link { padding: 0 8px; min-height: 36px; font-size: .85rem; }
 .viajes { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .viaje { width: 100%; text-align: left; font: inherit; font-size: .92rem; font-weight: 700; color: var(--text); background: var(--soft); border: 0; border-radius: 14px; padding: 10px 12px; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .viajes, .viajes li { min-width: 0; }
