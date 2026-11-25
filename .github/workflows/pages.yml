@@ -31,7 +31,7 @@ jobs:
       - name: Armar sitio
         run: |
           mkdir _site
-          cp -r index.html styles.css sw.js manifest.webmanifest src icons _site/
+          cp -r index.html styles.css sw.js manifest.webmanifest src icons fonts _site/
           rm -f _site/src/*.d.ts
           mkdir _site/data && cp data/transmetro.json _site/data/
           # Versión única por publicación: obliga a los celulares a instalar el service worker nuevo.

@@ -394,7 +394,19 @@ function stats(legs) {
 
 /** @param {ReturnType<typeof stats>} s */
 function resumenHtml(s) {
-  return `<p class="resumen"><span><b>${s.transbordos}</b> ${s.transbordos === 1 ? 'transbordo' : 'transbordos'}</span><span><b>${cuadras(s.walk)}</b> a pie</span><span><b>${s.paradas}</b> paradas</span></p>`;
+  const c = Math.max(0, Math.round(s.walk));
+  return `<p class="resumen"><span><b>${s.transbordos}</b> ${s.transbordos === 1 ? 'transbordo' : 'transbordos'}</span><span><b>${c}</b> ${c === 1 ? 'cuadra' : 'cuadras'} a pie</span><span><b>${s.paradas}</b> ${s.paradas === 1 ? 'parada' : 'paradas'}</span></p>`;
+}
+
+/**
+ * Códigos de las rutas como placas de color, en orden de abordaje.
+ * @param {Tramo[]} legs @returns {string}
+ */
+function placasHtml(legs) {
+  const rides = legs.flatMap((l) => (l.type === 'ride' ? [l] : []));
+  if (!rides.length) return 'A pie';
+  return rides.map((l) => `<span class="placa ${l.route.type}">${esc(l.routeCode)}</span>`)
+    .join('<span class="flecha" aria-hidden="true">→</span><span class="sr-only"> y luego </span>');
 }
 
 const ERRORES = {
@@ -413,7 +425,7 @@ function renderResult(res, otro, from, to, date, perfil) {
     return;
   }
   const s = stats(res.legs);
-  let html = `<div class="card"><h2 class="titulo-ruta">${esc(s.codes || 'A pie')}</h2>${resumenHtml(s)}<ol class="pasos">${legsHtml(res.legs, from, to)}</ol>`;
+  let html = `<div class="card"><h2 class="titulo-ruta">${placasHtml(res.legs)}</h2>${resumenHtml(s)}<ol class="pasos">${legsHtml(res.legs, from, to)}</ol>`;
   const dudosas = res.legs.flatMap((l) => (l.type === 'ride' && operaEn(l.route, date) === null ? [l.routeCode] : []));
   if (dudosas.length) html += `<div class="aviso">No pude confirmar el horario de ${dudosas.join(', ')} para esa hora. Revisa el enlace oficial.</div>`;
   if (s.transbordos > 0) html += '<p class="muted nota-transbordo">Los transbordos son gratis si los haces dentro de 105 minutos desde que validas la tarjeta.</p>';
